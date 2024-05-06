@@ -644,7 +644,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 						break;
 				}
 
-				$html = sprintf( '<div class="%s">%s</div>', PT_CV_PREFIX . 'taxoterm' . ' ' . $position, $mtt );
+				$html = sprintf( '<div class="%s">%s</div>', PT_CV_PREFIX . 'taxoterm' . ' ' . esc_attr( $position ), $mtt );
 				PT_CV_Functions::set_global_variable( 'taxoterm_output_' . $post->ID, $html );
 			}
 
@@ -727,7 +727,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 							$author_info = $avatar . $author_info;
 						}
 
-						$author_html		 = sprintf( '<span class="%s">%s <a href="%s" rel="author">%s</a></span>', esc_attr( $author_class ), $prefix_text, esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ), $author_info );
+						$author_html		 = sprintf( '<span class="%s">%s <a href="%s" rel="author">%s</a></span>', esc_attr( $author_class ), wp_kses_post( $prefix_text ), esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ), $author_info );
 						$html[ 'author' ]	 = apply_filters( PT_CV_PREFIX_ . 'field_meta_author_html', $author_html, $post );
 						break;
 
@@ -772,7 +772,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 			$class		 = apply_filters( PT_CV_PREFIX_ . 'field_meta_fields_class', PT_CV_PREFIX . 'meta-fields' );
 			$tag		 = apply_filters( PT_CV_PREFIX_ . 'field_meta_fields_tag', 'div' );
 			$wrapper	 = sprintf( '<%1$s class="%2$s">%3$s</%1$s>', tag_escape( $tag ), esc_attr( $class ), '%s' );
-			$meta_html	 = implode( empty($seperator) ? $seperator : "<span>$seperator</span>", (array) apply_filters( PT_CV_PREFIX_ . 'meta_field_html', $meta_html ) );
+			$meta_html	 = implode( empty( $seperator ) ? $seperator : "<span>" . esc_html( $seperator ) . "</span>", (array) apply_filters( PT_CV_PREFIX_ . 'meta_field_html', $meta_html ) );
 			$html		 = !empty( $meta_html ) ? sprintf( $wrapper, $meta_html ) : '';
 
 			return $html;
@@ -806,7 +806,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 			if ( $type == 'normal' || $style == 'regular' ) {
 				$extra_data		 = apply_filters( PT_CV_PREFIX_ . 'pagination_data', '' );
 				$ul_class		 = implode( ' ', array( PT_CV_PREFIX . 'pagination', PT_CV_PREFIX . $type, 'pagination' ) );
-				$pagination_btn	 = sprintf( '<ul class="%s" data-totalpages="%s" data-currentpage="%s" data-sid="%s" data-unid="%s" %s>%s</ul>', $ul_class, esc_attr( $max_num_pages ), esc_attr( $current_page ), esc_attr( $sid ), esc_attr( $cv_unique_id ), $extra_data, PT_CV_Functions::pagination_links( $max_num_pages, $current_page ) );
+				$pagination_btn	 = sprintf( '<ul class="%s" data-totalpages="%s" data-currentpage="%s" data-sid="%s" data-unid="%s" %s>%s</ul>', esc_attr( $ul_class ), esc_attr( $max_num_pages ), esc_attr( $current_page ), esc_attr( $sid ), esc_attr( $cv_unique_id ), $extra_data, PT_CV_Functions::pagination_links( $max_num_pages, $current_page ) );
 			} else {
 				$pagination_btn = apply_filters( PT_CV_PREFIX_ . 'btn_more_html', $pagination_btn, $max_num_pages, $sid );
 			}
