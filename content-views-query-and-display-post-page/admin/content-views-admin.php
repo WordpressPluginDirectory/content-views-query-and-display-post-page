@@ -305,6 +305,8 @@ class PT_Content_Views_Admin {
 
 			wp_dequeue_style( 'wp-radio-admin' );
 
+			wp_dequeue_style( 'adrotate-admin-stylesheet' );
+
 			do_action( PT_CV_PREFIX_ . 'remove_unwanted_assets' );
 		}
 	}

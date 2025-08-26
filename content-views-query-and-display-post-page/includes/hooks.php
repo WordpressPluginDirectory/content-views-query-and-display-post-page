@@ -346,7 +346,9 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 			if ( ContentViews_Block::is_block() ) {
 				$args[] = 'iscvblock';
 
-				if ( ContentViews_Block::is_hybrid() ) {
+				if ( ContentViews_Elementor_Init::is_widget() ) {
+					$args[] = 'iscvelementor';
+				} else if ( ContentViews_Block::is_hybrid() ) {
 					$args[] = 'iscvhybrid';
 				} else {
 					$args[] = 'iscvreal';
@@ -437,8 +439,8 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 				}
 
 				foreach ( $args[ 'fields' ] as $idx => $field ) {
-					if ( $field !== 'title' && strpos( $field, 'woo' ) === false && !PT_CV_Functions::setting_value( PT_CV_PREFIX . "show-field-$field-Others" ) ) {
-						unset( $args[ 'fields' ][ $idx ] );
+					if ( apply_filters( PT_CV_PREFIX_ . 'unset_fields', $field !== 'title', $field ) && strpos( $field, 'woo' ) === false && !PT_CV_Functions::setting_value( PT_CV_PREFIX . "show-field-$field-Others" ) ) {
+                        unset( $args[ 'fields' ][ $idx ] );
 					}
 				}
 
@@ -547,7 +549,7 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 				$attributes[ 'zigzag' ] = 'yes';
 			}
 
-			if ( $attributes[ 'viewType' ] === 'scrollable' ) {
+			if ( $attributes[ 'viewType' ] === 'scrollable' && !ContentViews_Elementor_Init::is_widget( $attributes ) ) {
 				$columns						 = (array) $attributes[ 'columns' ];
 				$rows							 = $attributes[ 'rowNum' ];
 				$attributes[ 'postsPerPage' ]	 = (int) $columns[ 'md' ] * (int) $rows * (int) $attributes[ 'slideNum' ];

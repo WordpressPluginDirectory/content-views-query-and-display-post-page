@@ -42,7 +42,7 @@ class PT_Content_Views {
 	 */
 	private function __construct() {
 		// Load plugin text domain
-		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ), 11 );
+		add_action( 'init', array( $this, 'load_plugin_textdomain' ), 11 );
 
 		// Register content
 		add_action( 'init', array( $this, 'content_register' ) );

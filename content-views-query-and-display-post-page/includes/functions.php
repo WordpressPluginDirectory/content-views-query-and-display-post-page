@@ -1382,7 +1382,9 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			$filters_bak = $wp_filter;
 
 			remove_all_filters( 'paginate_links' );
-			remove_all_filters( 'get_pagenum_link' );
+			if ( !cv_is_active_plugin( 'polylang' ) ) {
+				remove_all_filters( 'get_pagenum_link' );
+			}
 			add_filter( 'paginate_links', array( __CLASS__, 'remove_pagination_params' ) );
 
 			$params = array(
@@ -1551,6 +1553,33 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			// is 0 (not saved view), string (saved view), null (block)
 			$view_id = PT_CV_Functions::setting_value( PT_CV_PREFIX . 'view-id', $arr );
 			return ($view_id === null) ? false : true;
+		}
+
+		/* Get taxonomies of selected post type
+		 * @since 4.0
+		 */
+		static function get_taxonomies_by_post_type( $data ) {
+			$post_types = $data[ 'postType' ];
+			if ( $post_types === 'any' ) {
+				$post_types = $data[ 'multipostType' ];
+			}
+
+			// Ensure to get all post types, for both Elementor widget & Block
+			// Elementor: cvElementor available in both widget/preview/frontend
+			// Block: cvBlock available in editor only
+			$arr			 = PT_CV_Values::post_types_vs_taxonomies( true );
+			$matched_taxo	 = [];
+			foreach ( (array) $post_types as $post_type ) {
+				if ( is_array( $arr[ $post_type ] ) ) {
+					$matched_taxo = array_merge( $matched_taxo, $arr[ $post_type ] );
+				}
+			}
+
+			return $matched_taxo;
+		}
+
+		static function has_pro() {
+			return class_exists( 'PT_Content_Views_Pro' ) || get_option( 'pt_cv_version_pro' );
 		}
 
 	}
