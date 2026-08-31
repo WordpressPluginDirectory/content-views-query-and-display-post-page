@@ -97,33 +97,33 @@ $cvsetting_haspro = get_option( 'pt_cv_version_pro' );
 
 <div class="cv-admin-settings">
 	<div class="cv-admin-header cv-admin-section">
-		<img src='<?php echo plugins_url( 'admin/assets/images/icon.png', PT_CV_FILE ) ?>' class="cv-admin-logo"/>
-		<div>Welcome To Content Views</div>
-		<div class="cv-admin-version"> Version <?php echo esc_html( PT_CV_Functions::plugin_info( PT_CV_FILE, 'Version' ) ); ?> </div>
+		<img src='<?php echo esc_url( plugins_url( 'admin/assets/images/icon.png', PT_CV_FILE ) ); ?>' class="cv-admin-logo"/>
+		<div><?php esc_html_e( 'Welcome To Content Views', 'content-views-query-and-display-post-page' ); ?></div>
+		<div class="cv-admin-version"> <?php esc_html_e( 'Version', 'content-views-query-and-display-post-page' ); ?> <?php echo esc_html( PT_CV_Functions::plugin_info( PT_CV_FILE, 'Version' ) ); ?> </div>
 	</div>
 
 
-	<div class="cv-admin-content">		
+	<div class="cv-admin-content">
 		<div class="cv-admin-grid-left">
 			<div class="cv-admin-section">
-				<h3>Shortcode Introduction</h3>
-				<p>We built a powerful shortcode feature to help you display content in the Classic editor and page builder easily. Simply create shortcodes, then insert shortcodes to where you want.</p>
+				<h3><?php esc_html_e( 'Shortcode Introduction', 'content-views-query-and-display-post-page' ); ?></h3>
+				<p><?php esc_html_e( 'We built a powerful shortcode feature to help you display content in the Classic editor and page builder easily. Simply create shortcodes, then insert shortcodes to where you want.', 'content-views-query-and-display-post-page' ); ?></p>
 				<div class="cv-admin-video">
 					<iframe width="100%" height="100%" src="https://www.youtube.com/embed/QgQLjB0DQ8s?controls=1&modestbranding=1&rel=0&cc_load_policy=1" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 				</div>
 			</div>
 
 			<div class="cv-admin-section" id="block-intro-video">
-				<h3>Blocks Introduction</h3>
-				<p>We added 16 advanced post blocks to the Block Editor to help you display posts, pages, custom post types, media files stunningly with endless customization options.</p>
+				<h3><?php esc_html_e( 'Blocks Introduction', 'content-views-query-and-display-post-page' ); ?></h3>
+				<p><?php esc_html_e( 'We added 16 advanced post blocks to the Block Editor to help you display posts, pages, custom post types, media files stunningly with endless customization options.', 'content-views-query-and-display-post-page' ); ?></p>
 				<div class="cv-admin-video">
 					<iframe width="100%" height="100%" src="https://www.youtube.com/embed/4Mj55xrPtV8?controls=1&modestbranding=1&rel=0&cc_load_policy=1&start=17" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 				</div>
 			</div>
 
 			<div class="cv-admin-section">
-				<h3>Elementor Widgets Introduction</h3>
-				<p>Enhance your Elementor experience with advanced 16 widgets to show your posts, pages, custom post types, media files in stunning layouts (grid, list, slider, timeline, and many more).</p>
+				<h3><?php esc_html_e( 'Elementor Widgets Introduction', 'content-views-query-and-display-post-page' ); ?></h3>
+				<p><?php esc_html_e( 'Enhance your Elementor experience with advanced 16 widgets to show your posts, pages, custom post types, media files in stunning layouts (grid, list, slider, timeline, and many more).', 'content-views-query-and-display-post-page' ); ?></p>
 				<div class="cv-admin-video">
 					<iframe width="100%" height="100%" src="https://www.youtube.com/embed/xaKZM9T794c?controls=1&modestbranding=1&rel=0&cc_load_policy=1" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 				</div>
@@ -132,52 +132,52 @@ $cvsetting_haspro = get_option( 'pt_cv_version_pro' );
 		</div>
 		<div class="cv-admin-grid-right">
 			<div class="cv-admin-section features-list">
-				<h3 class="cv-hl-text"><?php echo $cvsetting_haspro ? 'Top Premium Features Available' : 'More Benefits And Values For Your Site'; ?></h3>
+				<h3 class="cv-hl-text"><?php echo esc_html( $cvsetting_haspro ? __( 'Top Premium Features Available', 'content-views-query-and-display-post-page' ) : __( 'More Benefits And Values For Your Site', 'content-views-query-and-display-post-page' ) ); ?></h3>
 				<ul>
 					<li>
-						<h4>Fully Support Custom Post Type, Custom Taxonomy, Custom Field</h4>
-						<div>WooCommerce, EDD, The Events Calendar... (<a href="https://contentviewspro.com/demo/integration/woocommerce/<?php echo cvsetting_tmp_utm1('post-type'); ?>" target="_blank">see demo</a>)</div>
-						<div>Advanced Custom Fields, Meta Box, Pods... (<a href="https://contentviewspro.com/demo/integration/advanced-custom-fields/<?php echo cvsetting_tmp_utm1('custom-field'); ?>" target="_blank">see demo</a>)</div>
+						<h4><?php esc_html_e( 'Fully Support Custom Post Type, Custom Taxonomy, Custom Field', 'content-views-query-and-display-post-page' ); ?></h4>
+						<div><?php esc_html_e( 'WooCommerce, EDD, The Events Calendar...', 'content-views-query-and-display-post-page' ); ?> (<a href="https://contentviewspro.com/demo/integration/woocommerce/<?php echo esc_attr( cvsetting_tmp_utm1('post-type') ); ?>" target="_blank"><?php esc_html_e( 'see demo', 'content-views-query-and-display-post-page' ); ?></a>)</div>
+						<div><?php esc_html_e( 'Advanced Custom Fields, Meta Box, Pods...', 'content-views-query-and-display-post-page' ); ?> (<a href="https://contentviewspro.com/demo/integration/advanced-custom-fields/<?php echo esc_attr( cvsetting_tmp_utm1('custom-field') ); ?>" target="_blank"><?php esc_html_e( 'see demo', 'content-views-query-and-display-post-page' ); ?></a>)</div>
 					</li>
 					<li>
-						<h4>More Amazing Layouts To Attract Your Visitors</h4>
-						<div>Pinterest, Masonry, Timeline, Glossary, Overlay... (<a href="https://contentviewspro.com/demo/blocks/pinterest/<?php echo cvsetting_tmp_utm1('layouts'); ?>" target="_blank">see demo</a>)</div>
+						<h4><?php esc_html_e( 'More Amazing Layouts To Attract Your Visitors', 'content-views-query-and-display-post-page' ); ?></h4>
+						<div><?php esc_html_e( 'Pinterest, Masonry, Timeline, Glossary, Overlay...', 'content-views-query-and-display-post-page' ); ?> (<a href="https://contentviewspro.com/demo/blocks/pinterest/<?php echo esc_attr( cvsetting_tmp_utm1('layouts') ); ?>" target="_blank"><?php esc_html_e( 'see demo', 'content-views-query-and-display-post-page' ); ?></a>)</div>
 					</li>
 					<li>
-						<h4>Grid Layout For Blog, Category, Search... Page</h4>
-						<div>Use the beautiful grid for Blog, Category, Tag, Search ... page easily without coding (<a href="https://contentviewspro.com/demo/category/entertainment/<?php echo cvsetting_tmp_utm1('replace-layout'); ?>" target="_blank">see demo</a>)</div>
+						<h4><?php esc_html_e( 'Grid Layout For Blog, Category, Search... Page', 'content-views-query-and-display-post-page' ); ?></h4>
+						<div><?php esc_html_e( 'Use the beautiful grid for Blog, Category, Tag, Search ... page easily without coding', 'content-views-query-and-display-post-page' ); ?> (<a href="https://contentviewspro.com/demo/category/entertainment/<?php echo esc_attr( cvsetting_tmp_utm1('replace-layout') ); ?>" target="_blank"><?php esc_html_e( 'see demo', 'content-views-query-and-display-post-page' ); ?></a>)</div>
 					</li>
 					<li>
-						<h4>Advanced Front-End Filter</h4>
-						<div>Help your visitors find content faster and easier (<a href="https://contentviewspro.com/demo/faceted-search-live-filter/<?php echo cvsetting_tmp_utm1('frontend-filter'); ?>" target="_blank">see demo</a>)</div>
+						<h4><?php esc_html_e( 'Advanced Front-End Filter', 'content-views-query-and-display-post-page' ); ?></h4>
+						<div><?php esc_html_e( 'Help your visitors find content faster and easier', 'content-views-query-and-display-post-page' ); ?> (<a href="https://contentviewspro.com/demo/faceted-search-live-filter/<?php echo esc_attr( cvsetting_tmp_utm1('frontend-filter') ); ?>" target="_blank"><?php esc_html_e( 'see demo', 'content-views-query-and-display-post-page' ); ?></a>)</div>
 					</li>
 					<li>
-						<h4>66+ Stunning Ready-To-Use Patterns</h4>
-						<div>Save time and get excellent results with patterns (<a href="https://contentviewspro.com/demo/block-patterns/<?php echo cvsetting_tmp_utm1('patterns'); ?>" target="_blank">read more</a>)</div>
+						<h4><?php esc_html_e( '66+ Stunning Ready-To-Use Patterns', 'content-views-query-and-display-post-page' ); ?></h4>
+						<div><?php esc_html_e( 'Save time and get excellent results with patterns', 'content-views-query-and-display-post-page' ); ?> (<a href="https://contentviewspro.com/demo/block-patterns/<?php echo esc_attr( cvsetting_tmp_utm1('patterns') ); ?>" target="_blank"><?php esc_html_e( 'read more', 'content-views-query-and-display-post-page' ); ?></a>)</div>
 					</li>
 					<li>
-						<h4>Make Money Online $</h4>
-						<div>Display Google Ads, banners... in post grid easily (<a href="https://contentviewspro.com/demo/show-advertisements-in-layout/<?php echo cvsetting_tmp_utm1('showads'); ?>" target="_blank">read more</a>)</div>
+						<h4><?php esc_html_e( 'Make Money Online $', 'content-views-query-and-display-post-page' ); ?></h4>
+						<div><?php esc_html_e( 'Display Google Ads, banners... in post grid easily', 'content-views-query-and-display-post-page' ); ?> (<a href="https://contentviewspro.com/demo/show-advertisements-in-layout/<?php echo esc_attr( cvsetting_tmp_utm1('showads') ); ?>" target="_blank"><?php esc_html_e( 'read more', 'content-views-query-and-display-post-page' ); ?></a>)</div>
 					</li>
 				</ul>
 				<?php if ( !$cvsetting_haspro ) { ?>
-				<a href="https://www.contentviewspro.com/<?php echo cvsetting_tmp_utm1('upgrade'); ?>" target="_blank" class="btn">Get Pro Now</a>
+				<a href="https://www.contentviewspro.com/<?php echo esc_attr( cvsetting_tmp_utm1('upgrade') ); ?>" target="_blank" class="btn"><?php esc_html_e( 'Get Pro Now', 'content-views-query-and-display-post-page' ); ?></a>
 				<?php } ?>
 			</div>
 			<div class="cv-admin-section">
-				<h3>Demo</h3>
-				<p>Check out the demo pages to learn about our super powerful post blocks & shortcode.</p>
-				<a href="https://contentviewspro.com/demo/<?php echo cvsetting_tmp_utm1('demo'); ?>" target="_blank">See Demos</a>
+				<h3><?php esc_html_e( 'Demo', 'content-views-query-and-display-post-page' ); ?></h3>
+				<p><?php esc_html_e( 'Check out the demo pages to learn about our super powerful post blocks & shortcode.', 'content-views-query-and-display-post-page' ); ?></p>
+				<a href="https://contentviewspro.com/demo/<?php echo esc_attr( cvsetting_tmp_utm1('demo') ); ?>" target="_blank"><?php esc_html_e( 'See Demos', 'content-views-query-and-display-post-page' ); ?></a>
 			</div>
 			<div class="cv-admin-section">
-				<h3>Documentation</h3>
-				<p>Go through the easy documentation to get familiar with Content Views.</p>
-				<a href="https://contentviewspro.com/documentation/<?php echo cvsetting_tmp_utm1('documentation'); ?>" target="_blank">Read Documentation</a>
+				<h3><?php esc_html_e( 'Documentation', 'content-views-query-and-display-post-page' ); ?></h3>
+				<p><?php esc_html_e( 'Go through the easy documentation to get familiar with Content Views.', 'content-views-query-and-display-post-page' ); ?></p>
+				<a href="https://contentviewspro.com/documentation/<?php echo esc_attr( cvsetting_tmp_utm1('documentation') ); ?>" target="_blank"><?php esc_html_e( 'Read Documentation', 'content-views-query-and-display-post-page' ); ?></a>
 			</div>
 			<div class="cv-admin-section">
-				<h3>Need Helps</h3>
-				<p>Get in touch with our dedicated support team whenever you encounter an issue.</p>
-				<a href="https://www.contentviewspro.com/contact/<?php echo cvsetting_tmp_utm1('contact'); ?>" target="_blank">Contact Us</a>
+				<h3><?php esc_html_e( 'Need Helps', 'content-views-query-and-display-post-page' ); ?></h3>
+				<p><?php esc_html_e( 'Get in touch with our dedicated support team whenever you encounter an issue.', 'content-views-query-and-display-post-page' ); ?></p>
+				<a href="https://www.contentviewspro.com/contact/<?php echo esc_attr( cvsetting_tmp_utm1('contact') ); ?>" target="_blank"><?php esc_html_e( 'Contact Us', 'content-views-query-and-display-post-page' ); ?></a>
 			</div>
 		</div>
 	</div>

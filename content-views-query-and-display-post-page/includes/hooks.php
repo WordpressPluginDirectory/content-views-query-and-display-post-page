@@ -511,7 +511,7 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 						}
 					}
 
-					if ( $others ) {
+					if ( $others || $is_overlay ) {
 						$args[ 'overlay-wrap' ] = '<div class="' . PT_CV_PREFIX . ($is_overlay ? 'overlay-wrapper' : 'remain-wrapper') . '">' . implode( '', $others ) . '</div>';
 					}
 				}
@@ -572,7 +572,7 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 
 		public static function filter_post_types_list( $args ) {
 			if ( !get_option( 'pt_cv_version_pro' ) ) {
-				$args[ 'attachment' ]	 = __( 'Media' );
+				$args[ 'attachment' ]	 = __( 'Media', 'content-views-query-and-display-post-page' );
 				$args[ 'any' ]			 = __( 'All / Multi post types', 'content-views-query-and-display-post-page' );
 			}
 
@@ -622,7 +622,7 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 		/** Add Woocommerce hidden taxonomies to the list */
         public static function filter_tax_list( $args ) {
             if ( taxonomy_exists( 'product_visibility' ) ) {
-                $args[ 'product_visibility' ] = __( 'Visibility', 'content-views-pro' );
+                $args[ 'product_visibility' ] = __( 'Visibility', 'content-views-query-and-display-post-page' );
             }
 
 			// Get Woocommerce attributes taxonomies

@@ -15,6 +15,7 @@
 							action: 'contentviews_elementor_search_post',
 							post_type: get_post_type(),
 							term: params.term,
+							secure_nonce: contentviews_creatable_localize.el_nonce
 						}
 					},
 				},
@@ -42,6 +43,7 @@
 							data: {
 								action: 'contentviews_elementor_get_title',
 								post_type: get_post_type(),
+								secure_nonce: contentviews_creatable_localize.el_nonce,
 								id: ids
 							}
 						} ).done( function ( response ) {

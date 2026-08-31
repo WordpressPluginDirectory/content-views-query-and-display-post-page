@@ -7,15 +7,15 @@
  * @copyright 2014 PT Guy
  *
  * @wordpress-plugin
- * Plugin Name:       Content Views
+ * Plugin Name:       Content Views - Post Grid & Filter (Shortcode, Blocks, Elementor Widgets)
  * Plugin URI:        http://wordpress.org/plugins/content-views-query-and-display-post-page/
  * Description:       Display your posts, pages, custom posts, media files in beautiful Grid, List, Slider, and other layouts easily. With a powerful shortcode feature for the Classic Editor & page builders, 16 blocks & 76+ patterns for the Block Editor, and 16 widgets for the Elementor page builder.
- * Version:           4.2.1
+ * Version:           4.5.1.2
  * Author:            Content Views
  * Author URI:        http://profiles.wordpress.org/pt-guy
  * Text Domain:       content-views-query-and-display-post-page
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * License:           GPLv3
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Domain Path:       /languages
  */
 // Exit if accessed directly
@@ -24,7 +24,7 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 
 // Define Constant
-define( 'PT_CV_VERSION', '4.2.1' );
+define( 'PT_CV_VERSION', '4.5.1.2' );
 define( 'PT_CV_FILE', __FILE__ );
 define( 'PT_CV_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PT_CV_URL', plugin_dir_url( __FILE__ ) );

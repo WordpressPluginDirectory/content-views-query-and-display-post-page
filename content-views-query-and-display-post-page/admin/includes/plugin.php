@@ -43,7 +43,7 @@ if ( !class_exists( 'PT_CV_Plugin' ) ) {
 			$text = PT_CV_Functions::file_include_content( $file_path );
 
 			$text = apply_filters( PT_CV_PREFIX_ . 'settings_page_section_one', $text );
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Use hardcoded HTML from our plugin file
 			echo $text;
 		}
 
@@ -57,7 +57,7 @@ if ( !class_exists( 'PT_CV_Plugin' ) ) {
 			$text = PT_CV_Functions::file_include_content( $file_path );
 
 			$text = apply_filters( PT_CV_PREFIX_ . 'settings_page_section_two', $text );
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Use hardcoded HTML from our plugin file
 			echo $text;
 		}
 
@@ -87,7 +87,7 @@ if ( !class_exists( 'PT_CV_Plugin' ) ) {
 			</div>
 			<?php
 			$text			 = ob_get_clean();
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already escaped in do_settings_sections()
 			echo $text;
 		}
 
@@ -205,16 +205,19 @@ if ( !class_exists( 'PT_CV_Plugin' ) ) {
 			$field_id = esc_attr( $field_name );
 
 			printf(
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already escaped attributes above
 				'<input type="%1$s" id="%2$s" name="%3$s[%2$s]" value="%4$s" %5$s /> ', esc_attr( $field_type ), $field_id, PT_CV_OPTION_NAME, $field_value, $checked
 			);
 
 			// For radio, checkbox field
 			if ( !empty( $text ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				printf( '<label for="%s" class="label-for-option">%s</label>', $field_id, $text );
 			}
 
 			// Show description
 			if ( !empty( $desc ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				printf( '<p class="description">%s</p>', $desc );
 			}
 		}

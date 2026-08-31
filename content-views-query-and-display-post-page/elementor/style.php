@@ -940,6 +940,14 @@ if ( !class_exists( 'ContentViews_Elementor_Style_Controls' ) ) {
 						"{{WRAPPER}} {$prefix}pagination-wrapper .active a" => 'background-color: {{VALUE}};'
 					],
 				],
+				"paginationActiveColor" =>
+				[
+					'label'	 => __( 'Active Text Color', 'content-views-query-and-display-post-page' ),
+					'type'	 => \Elementor\Controls_Manager::COLOR,
+					'selectors' => [
+						"{{WRAPPER}} {$prefix}pagination-wrapper .active a" => 'color: {{VALUE}};'
+					],
+				],
 				"paginationBorderStyle" =>
 				[
 					'label'		 => __( 'Border Style', 'content-views-query-and-display-post-page' ),

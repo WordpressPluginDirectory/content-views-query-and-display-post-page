@@ -174,12 +174,15 @@ class PT_Content_Views {
 	public static function get_blog_ids( $limits = null ) {
 
 		global $wpdb;
-		$limit	 = $limits ? 'LIMIT ' . intval( $limits ) : '';
+
 		// Get an array of blog ids
 		$sql = "SELECT blog_id FROM $wpdb->blogs
 			WHERE archived = '0' AND spam = '0'
-			AND deleted = '0' $limit";
-
+			AND deleted = '0' ";
+		if ( $limits ) {
+			$sql .= $wpdb->prepare( ' LIMIT %d', $limits );
+		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- already prepared above
 		return $wpdb->get_col( $sql );
 	}
 
@@ -215,14 +218,11 @@ class PT_Content_Views {
 
 		$old_lang_file	 = WP_LANG_DIR . "/content-views/content-views-{$locale}.mo";
 		$lang_pack		 = WP_LANG_DIR . "/plugins/content-views-query-and-display-post-page-{$locale}.mo";
-		$plugin_lang_dir = dirname( plugin_basename( PT_CV_FILE ) ) . '/languages/';
 
 		if ( file_exists( $old_lang_file ) ) {
 			load_textdomain( 'content-views-query-and-display-post-page', $old_lang_file );
 		} elseif ( file_exists( $lang_pack ) ) {
 			load_textdomain( 'content-views-query-and-display-post-page', $lang_pack );
-		} else {
-			load_plugin_textdomain( 'content-views-query-and-display-post-page', FALSE, $plugin_lang_dir );
 		}
 	}
 
@@ -239,7 +239,7 @@ class PT_Content_Views {
 			'singular_name'		 => _x( 'View', 'post type singular name', 'content-views-query-and-display-post-page' ),
 			'menu_name'			 => _x( 'Views', 'admin menu', 'content-views-query-and-display-post-page' ),
 			'name_admin_bar'	 => _x( 'Content View', 'add new on admin bar', 'content-views-query-and-display-post-page' ),
-			'add_new'			 => _x( 'Add New', 'post' ),
+			'add_new'			 => __( 'Add New', 'content-views-query-and-display-post-page' ),
 			'add_new_item'		 => __( 'Add New View', 'content-views-query-and-display-post-page' ),
 			'new_item'			 => __( 'New View', 'content-views-query-and-display-post-page' ),
 			'edit_item'			 => __( 'Edit View', 'content-views-query-and-display-post-page' ),

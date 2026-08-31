@@ -216,8 +216,8 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 		 */
 		static function orders() {
 			return array(
-				'asc'	 => __( 'Ascending' ),
-				'desc'	 => __( 'Descending' ),
+				'asc'	 => __( 'Ascending', 'content-views-query-and-display-post-page' ),
+				'desc'	 => __( 'Descending', 'content-views-query-and-display-post-page' ),
 			);
 		}
 
@@ -242,11 +242,11 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 		static function advanced_settings() {
 			return apply_filters(
 				PT_CV_PREFIX_ . 'advanced_settings', array(
-				'taxonomy'	 => __( 'Taxonomy', 'content-views-query-and-display-post-page' ) . sprintf( ' (%s, %s...)', __( 'Categories' ), __( 'Tags' ) ),
-				'status'	 => __( 'Status' ),
+				'taxonomy'	 => __( 'Taxonomy', 'content-views-query-and-display-post-page' ) . sprintf( ' (%s, %s...)', __( 'Categories', 'content-views-query-and-display-post-page' ), __( 'Tags', 'content-views-query-and-display-post-page' ) ),
+				'status'	 => __( 'Status', 'content-views-query-and-display-post-page' ),
 				'order'		 => __( 'Sort by', 'content-views-query-and-display-post-page' ),
-				'search'	 => __( 'Keyword' ),
-				'author'	 => __( 'Author' ),
+				'search'	 => __( 'Keyword', 'content-views-query-and-display-post-page' ),
+				'author'	 => __( 'Author', 'content-views-query-and-display-post-page' ),
 				)
 			);
 		}
@@ -296,13 +296,13 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 		 */
 		static function post_regular_orderby() {
 			$regular_orderby = array(
-				''			 => sprintf( '- %s -', __( 'Select' ) ),
+				''			 => sprintf( '- %s -', __( 'Select', 'content-views-query-and-display-post-page' ) ),
 				'ID'		 => __( 'ID', 'content-views-query-and-display-post-page' ),
-				'title'		 => __( 'Title' ),
-				'name'		 => __( 'Post slug', 'content-views-pro' ),
+				'title'		 => __( 'Title', 'content-views-query-and-display-post-page' ),
+				'name'		 => __( 'Post slug', 'content-views-query-and-display-post-page' ),
 				'date'		 => __( 'Published date', 'content-views-query-and-display-post-page' ),
 				'modified'	 => __( 'Modified date', 'content-views-query-and-display-post-page' ),
-				'menu_order' => __( 'Menu order', 'content-views-pro' ),
+				'menu_order' => __( 'Menu order', 'content-views-query-and-display-post-page' ),
 			);
 
 			$result = apply_filters( PT_CV_PREFIX_ . 'regular_orderby', $regular_orderby );
@@ -408,7 +408,7 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 						$this_size[ 'height' ]	 = $_wp_additional_image_sizes[ $size_name ][ 'height' ];
 
 						// Calculate sizes value for sorting
-						$sizes_value = intval( $this_size[ 'width' ] ) * intval( $this_size[ 'height' ] ) + rand( 1, 10 );
+						$sizes_value = intval( $this_size[ 'width' ] ) * intval( $this_size[ 'height' ] ) + wp_rand( 1, 10 );
 
 						$dimensions_to_sort[ $sizes_value ] = $size_name;
 					} else {
@@ -423,7 +423,7 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 				}
 			}
 			// Add full sizes
-			$result[ 'full' ] = __( 'Full Size' );
+			$result[ 'full' ] = __( 'Full Size', 'content-views-query-and-display-post-page' );
 
 			// Sort custom sizes by index (width * height)
 			krsort( $dimensions_to_sort );
@@ -446,8 +446,8 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 		static function thumbnail_position() {
 
 			$thumbnail_position = array(
-				'left'	 => __( 'Left' ),
-				'right'	 => __( 'Right' ),
+				'left'	 => __( 'Left', 'content-views-query-and-display-post-page' ),
+				'right'	 => __( 'Right', 'content-views-query-and-display-post-page' ),
 			);
 
 			$result = apply_filters( PT_CV_PREFIX_ . 'thumbnail_position', $thumbnail_position );
@@ -477,11 +477,11 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 		// from Pro
 		static function view_type_pro() {
 			$result = array(
-				'pinterest'	 => __( 'Pinterest', 'content-views-pro' ),
-				'masonry'	 => __( 'Masonry', 'content-views-pro' ),
-				'timeline'	 => __( 'Timeline', 'content-views-pro' ),
-				'glossary'	 => __( 'Glossary', 'content-views-pro' ),
-				'one_others' => __( 'One and others', 'content-views-pro' ),
+				'pinterest'	 => __( 'Pinterest', 'content-views-query-and-display-post-page' ),
+				'masonry'	 => __( 'Masonry', 'content-views-query-and-display-post-page' ),
+				'timeline'	 => __( 'Timeline', 'content-views-query-and-display-post-page' ),
+				'glossary'	 => __( 'Glossary', 'content-views-query-and-display-post-page' ),
+				'one_others' => __( 'One and others', 'content-views-query-and-display-post-page' ),
 			);
 
 			return $result;
@@ -507,18 +507,18 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 		// @since Hybrid
 		static function hybrid_layouts() {
 			$arr = [
-				'grid1'		 => __( 'Grid 2', 'content-views-pro' ),
-				'list1'		 => __( 'List', 'content-views-pro' ),
-				'overlay1'	 => __( 'Overlay 1', 'content-views-pro' ),
-				'ovl2'		 => __( 'Overlay 2', 'content-views-pro' ),
-				'ovl3'		 => __( 'Overlay 3', 'content-views-pro' ),
-				'ovl4'		 => __( 'Overlay 4', 'content-views-pro' ),
-				'ovl5'		 => __( 'Overlay 5', 'content-views-pro' ),
-				'ovl6'		 => __( 'Overlay 6', 'content-views-pro' ),
-				'ovl7'		 => __( 'Overlay 7', 'content-views-pro' ),
-				'ovl8'		 => __( 'Overlay 8', 'content-views-pro' ),
-				'bigpost1'	 => __( 'Big Post 1', 'content-views-pro' ),
-				'bigpost2'	 => __( 'Big Post 2', 'content-views-pro' ),
+				'grid1'		 => __( 'Grid 2', 'content-views-query-and-display-post-page' ),
+				'list1'		 => __( 'List', 'content-views-query-and-display-post-page' ),
+				'overlay1'	 => __( 'Overlay 1', 'content-views-query-and-display-post-page' ),
+				'ovl2'		 => __( 'Overlay 2', 'content-views-query-and-display-post-page' ),
+				'ovl3'		 => __( 'Overlay 3', 'content-views-query-and-display-post-page' ),
+				'ovl4'		 => __( 'Overlay 4', 'content-views-query-and-display-post-page' ),
+				'ovl5'		 => __( 'Overlay 5', 'content-views-query-and-display-post-page' ),
+				'ovl6'		 => __( 'Overlay 6', 'content-views-query-and-display-post-page' ),
+				'ovl7'		 => __( 'Overlay 7', 'content-views-query-and-display-post-page' ),
+				'ovl8'		 => __( 'Overlay 8', 'content-views-query-and-display-post-page' ),
+				'bigpost1'	 => __( 'Big Post 1', 'content-views-query-and-display-post-page' ),
+				'bigpost2'	 => __( 'Big Post 2', 'content-views-query-and-display-post-page' ),
 			];
 			return apply_filters( PT_CV_PREFIX_ . 'hybrid_layouts', $arr );
 		}

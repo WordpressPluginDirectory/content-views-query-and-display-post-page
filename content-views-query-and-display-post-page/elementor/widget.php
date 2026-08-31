@@ -44,16 +44,16 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				$update_require	 = $pro_version && version_compare( $pro_version, $require_pro, '<' ) ? true : false;
 				return $update_require ? [
 					'condition'		 => true,
-					'title'			 => esc_html__( 'Update PRO version', 'elementor-list-widget' ),
-					'description'	 => esc_html__( 'Please update PRO version to 7.0 to ensure all premium features work as expected', 'elementor-list-widget' ),
+					'title'			 => esc_html__( 'Update PRO version', 'content-views-query-and-display-post-page' ),
+					'description'	 => esc_html__( 'Please update PRO version to 7.0 to ensure all premium features work as expected', 'content-views-query-and-display-post-page' ),
 				] : null;
 			} else {
 				return [
 					'condition'		 => true,
-					'title'			 => esc_html__( 'Unlock All Possibilities', 'elementor-list-widget' ),
-					'description'	 => esc_html__( 'Get access to advanced filters, frontend search, premium layouts with Content Views Pro', 'elementor-list-widget' ),
+					'title'			 => esc_html__( 'Unlock All Possibilities', 'content-views-query-and-display-post-page' ),
+					'description'	 => esc_html__( 'Get access to advanced filters, frontend search, premium layouts with Content Views Pro', 'content-views-query-and-display-post-page' ),
 					'upgrade_url'	 => 'https://www.contentviewspro.com/?utm_source=elementorWidget&utm_medium=banner',
-					'upgrade_text'	 => esc_html__( 'Upgrade Now', 'elementor-list-widget' ),
+					'upgrade_text'	 => esc_html__( 'Upgrade Now', 'content-views-query-and-display-post-page' ),
 				];
 			}
 		}
@@ -200,7 +200,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 			$localize_info	 = apply_filters( PT_CV_PREFIX_ . 'block_localize_data', $localize_info );
 
 			// Modify options
-			$localize_info[ 'data' ][ 'border_styles' ] = array_merge( [ '' => __( 'Default' ), ], $localize_info[ 'data' ][ 'border_styles' ] );
+			$localize_info[ 'data' ][ 'border_styles' ] = array_merge( [ '' => __( 'Default', 'content-views-query-and-display-post-page' ), ], $localize_info[ 'data' ][ 'border_styles' ] );
 
 			// Block [value=>, label=>]. Elementor [value=>label]
 			$localize_info[ 'data' ][ 'meta_fields' ] = array_column( ContentViews_Block_Common::meta_list(), 'label', 'value' );
@@ -231,12 +231,12 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 			// Differ from Block, make it similar to Pro
 			if ( !self::$hasPro ) {
 				$localize_info[ 'data' ][ 'manual_excerpt_options' ] = [
-					''		 => __( 'Ignore manual excerpt', 'content-views-pro' ),
-					'yes'	 => __( 'Use manual excerpt', 'content-views-pro' ),
+					''		 => __( 'Ignore manual excerpt', 'content-views-query-and-display-post-page' ),
+					'yes'	 => __( 'Use manual excerpt', 'content-views-query-and-display-post-page' ),
 				];
 				$localize_info[ 'data' ][ 'html_excerpt_options' ]	 = [
-					''		 => __( 'Strip all HTML tags', 'content-views-pro' ),
-					'yes'	 => __( 'Allow some HTML tags (a, br, strong, em, strike, i, ul, ol, li)', 'content-views-pro' ),
+					''		 => __( 'Strip all HTML tags', 'content-views-query-and-display-post-page' ),
+					'yes'	 => __( 'Allow some HTML tags (a, br, strong, em, strike, i, ul, ol, li)', 'content-views-query-and-display-post-page' ),
 				];
 			}
 
@@ -387,7 +387,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				'default'	 => [],
 				'multiple'	 => true,
 				'label_block' => true,
-				'description' => __( 'Leave empty to include all post types', 'content-views-pro' ),
+				'description' => __( 'Leave empty to include all post types', 'content-views-query-and-display-post-page' ),
 				'condition' => [
 					'postType' => 'any',
 				],
@@ -619,7 +619,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 
 			$this->add_control(
 			"excludeCurrent", [
-				'label'	 => __( 'Exclude current post', 'content-views-pro' ) . $this->_prolink( "excludeCurrent" ),
+				'label'	 => __( 'Exclude current post', 'content-views-query-and-display-post-page' ) . $this->_prolink( "excludeCurrent" ),
 				'type'	 => \Elementor\Controls_Manager::SWITCHER,
 				'classes' => ContentViews_Elementor_Widget::_wrapper_class(),
 			]
@@ -628,7 +628,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 
 			$this->add_control(
 			"excludeProtected", [
-				'label'	 => __( 'Exclude password protected posts', 'content-views-pro' ) . $this->_prolink( "excludeProtected" ),
+				'label'	 => __( 'Exclude password protected posts', 'content-views-query-and-display-post-page' ) . $this->_prolink( "excludeProtected" ),
 				'type'	 => \Elementor\Controls_Manager::SWITCHER,
 				'classes' => ContentViews_Elementor_Widget::_wrapper_class(),
 			]
@@ -637,7 +637,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 			if ( self::$hasPro ) {
 				$this->add_control(
 				"excludeChild", [
-					'label'	 => __( 'Exclude children posts', 'content-views-pro' ) . $this->_prolink( "excludeChild" ),
+					'label'	 => __( 'Exclude children posts', 'content-views-query-and-display-post-page' ) . $this->_prolink( "excludeChild" ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'classes' => ContentViews_Elementor_Widget::_wrapper_class(),
 				]
@@ -714,7 +714,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				"lfSortLabel", [
 					'label'	 => __( 'Label', 'content-views-query-and-display-post-page' ) . $this->_prolink( "lfSortLabel" ),
 					'type'	 => \Elementor\Controls_Manager::TEXT,
-					'default' => __( 'Sort by', 'content-views-pro' ),
+					'default' => __( 'Sort by', 'content-views-query-and-display-post-page' ),
 					'label_block' => true,
 					'classes' => ContentViews_Elementor_Widget::_wrapper_class(),
 				]
@@ -756,7 +756,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 			} else {
 				$intro_controls = [
 					"lfSortIntro" => [
-						'label'				 => __( 'Show sort options to visitors', 'content-views-pro' ),
+						'label'				 => __( 'Show sort options to visitors', 'content-views-query-and-display-post-page' ),
 						'type'				 => \Elementor\Controls_Manager::SWITCHER,
 						'_cv_pro_control'	 => true,
 						'description'		 => $this->_prolink( "lfSortIntro", __( "See Demo", "content-views-query-and-display-post-page" ), 'https://contentviewspro.com/demo/faceted-search-live-filter/', false ),
@@ -844,7 +844,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 
 				$this->add_control(
 				"searchLfEnable", [
-					'label'	 => __( 'Show search field to visitors', 'content-views-pro' ) . $this->_prolink( "searchLfEnable" ),
+					'label'	 => __( 'Show search field to visitors', 'content-views-query-and-display-post-page' ) . $this->_prolink( "searchLfEnable" ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'classes'		 => ContentViews_Elementor_Widget::_wrapper_class(),
 					'description'	 => $this->_prolink( "searchLfEnable", __( "See Demo", "content-views-query-and-display-post-page" ), 'https://contentviewspro.com/demo/faceted-search-live-filter/', false ),
@@ -854,9 +854,9 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 
 				$this->add_control(
 				"lfSearchLabel", [
-					'label'	 => __( 'Label', 'content-views-pro' ),
+					'label'	 => __( 'Label', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::TEXT,
-					'default' => __( 'Search', 'content-views-pro' ),
+					'default' => __( 'Search', 'content-views-query-and-display-post-page' ),
 					'condition' => [
 						'searchLfEnable' => 'yes',
 					],
@@ -866,7 +866,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 
 				$this->add_control(
 				"lfSearchHolder", [
-					'label'	 => __( 'Placeholder', 'content-views-pro' ),
+					'label'	 => __( 'Placeholder', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::TEXT,
 					'condition' => [
 						'searchLfEnable' => 'yes',
@@ -876,7 +876,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 			} else {
 				$intro_controls = [
 					"lfSearchIntro" => [
-						'label'				 => __( 'Show search field to visitors', 'content-views-pro' ),
+						'label'				 => __( 'Show search field to visitors', 'content-views-query-and-display-post-page' ),
 						'type'				 => \Elementor\Controls_Manager::SWITCHER,
 						'_cv_pro_control'	 => true,
 						'description'		 => $this->_prolink( "lfSearchIntro", __( "See Demo", "content-views-query-and-display-post-page" ), 'https://contentviewspro.com/demo/faceted-search-live-filter/', false ),
@@ -1048,6 +1048,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 					if ( $control_settings[ '_cv_group_control' ] === 'color_gradient_picker' ) {
 						$group_type						 = \Elementor\Group_Control_Background::get_type();
 						$control_settings[ 'types' ]	 = [ 'classic', 'gradient' ];
+						// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
 						$control_settings[ 'exclude' ]	 = [ 'image' ];
 					}
 					if ( $group_type ) {
@@ -1196,14 +1197,14 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 			return [
 				"{$tname}__LfEnable" =>
 				[
-					'label'	 => __( 'Show as filters to visitors', 'content-views-pro' ),
+					'label'	 => __( 'Show as filters to visitors', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'_cv_pro_control'	 => true,
 					'description'		 => $this->_prolink( "$tname-LfEnable", __( "See Demo", "content-views-query-and-display-post-page" ), 'https://contentviewspro.com/demo/faceted-search-live-filter/', false ),
 				],
 				"{$tname}__LfType" =>
 				[
-					'label'		 => __( 'Filter Type', 'content-views-pro' ),
+					'label'		 => __( 'Filter Type', 'content-views-query-and-display-post-page' ),
 					'type'		 => \Elementor\Controls_Manager::SELECT,
 					'options'	 => ContentViews_Elementor_Widget::_get_options( 'lf_settings', 'types' ),
 					'default'	 => ContentViews_Elementor_Widget::_get_default_val( 'lf_settings', 'types' ),
@@ -1213,7 +1214,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				],
 				"{$tname}__LfBehavior" =>
 				[
-					'label'		 => __( 'Behavior', 'content-views-pro' ),
+					'label'		 => __( 'Behavior', 'content-views-query-and-display-post-page' ),
 					'type'		 => \Elementor\Controls_Manager::SELECT,
 					'options'	 => ContentViews_Elementor_Widget::_get_options( 'lf_settings', 'behavior' ),
 					'default'	 => ContentViews_Elementor_Widget::_get_default_val( 'lf_settings', 'behavior' ),
@@ -1224,7 +1225,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				],
 				"{$tname}__LfLabel" =>
 				[
-					'label'	 => __( 'Label', 'content-views-pro' ),
+					'label'	 => __( 'Label', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::TEXT,
 					'description' => __( "Enter a space to remove label", "content-views-query-and-display-post-page" ),
 					'condition' => [
@@ -1233,7 +1234,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				],
 				"{$tname}__LfDefault" =>
 				[
-					'label'	 => __( 'The "All" text', 'content-views-pro' ),
+					'label'	 => __( 'The "All" text', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::TEXT,
 					'condition' => [
 						"{$tname}__LfEnable" => 'yes',
@@ -1242,7 +1243,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				],
 				"{$tname}__LfOrder" =>
 				[
-					'label'		 => __( 'Order By', 'content-views-pro' ),
+					'label'		 => __( 'Order By', 'content-views-query-and-display-post-page' ),
 					'type'		 => \Elementor\Controls_Manager::SELECT,
 					'options'	 => ContentViews_Elementor_Widget::_get_options( 'lf_settings', 'orderby' ),
 					'default'	 => ContentViews_Elementor_Widget::_get_default_val( 'lf_settings', 'orderby' ),
@@ -1262,7 +1263,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				],
 				"{$tname}__LfCount" =>
 				[
-					'label'	 => __( 'Show posts count', 'content-views-pro' ),
+					'label'	 => __( 'Show posts count', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'condition' => [
 						"{$tname}__LfEnable" => 'yes',
@@ -1270,7 +1271,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				],
 				"{$tname}__LfNoEmpty" =>
 				[
-					'label'	 => __( 'Hide values have no post', 'content-views-pro' ),
+					'label'	 => __( 'Hide values have no post', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'condition' => [
 						"{$tname}__LfEnable" => 'yes',
@@ -1278,7 +1279,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				],
 				"{$tname}__LfRequire" =>
 				[
-					'label'	 => __( 'Hide posts that do not have this taxonomy', 'content-views-pro' ),
+					'label'	 => __( 'Hide posts that do not have this taxonomy', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'condition' => [
 						"{$tname}__LfEnable" => 'yes',
@@ -2542,6 +2543,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				[
 					'label'	 => __( 'Read more text', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::TEXT,
+					// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 					'default' => ucwords( rtrim( __( 'Read more...' ), '.' ) ),
 					'label_block' => true,
 				],
@@ -2620,7 +2622,7 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 				[
 					'label'	 => "",
 					'type'	 => \Elementor\Controls_Manager::TEXT,
-					'description' => __( 'To define your format, please check', 'content-views-pro' ) . ' ' . $this->_prolink( "dateFormatCustom", __( "this document", "content-views-query-and-display-post-page" ), 'https://codex.wordpress.org/Formatting_Date_and_Time', false ),
+					'description' => __( 'To define your format, please check', 'content-views-query-and-display-post-page' ) . ' ' . $this->_prolink( "dateFormatCustom", __( "this document", "content-views-query-and-display-post-page" ), 'https://codex.wordpress.org/Formatting_Date_and_Time', false ),
 					'condition' => [
 						'dateFormat' => 'custom',
 					],
@@ -2692,14 +2694,14 @@ if ( !class_exists( 'ContentViews_Elementor_Widget' ) ) {
 return [
 				"showAds" =>
 				[
-					'label'	 => __( 'Show ads in output', 'content-views-pro' ),
+					'label'	 => __( 'Show ads in output', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'_cv_pro_control'	 => true,
 					'description'		 => $this->_prolink( "showAds", __( "See Demo", "content-views-query-and-display-post-page" ), 'https://contentviewspro.com/demo/show-advertisements-in-layout/', false ),
 				],
 				"adSCode" =>
 				[
-					'label'	 => __( 'Execute shortcode in ad content', 'content-views-pro' ),
+					'label'	 => __( 'Execute shortcode in ad content', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'condition' => [
 						'showAds' => 'yes',
@@ -2707,7 +2709,7 @@ return [
 				],
 				"adPosition" =>
 				[
-					'label'		 => __( 'Ads Positions', 'content-views-pro' ),
+					'label'		 => __( 'Ads Positions', 'content-views-query-and-display-post-page' ),
 					'type'		 => \Elementor\Controls_Manager::SELECT,
 					'options'	 => ContentViews_Elementor_Widget::_get_options( 'ad_positions' ),
 					'default'	 => ContentViews_Elementor_Widget::_get_default_val( 'ad_positions' ),
@@ -2717,7 +2719,7 @@ return [
 				],
 				"adPositionMan" =>
 				[
-					'label'	 => __( 'Manual Positions', 'content-views-pro' ),
+					'label'	 => __( 'Manual Positions', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::TEXT,
 					'description' => __( 'Enter numbers (separate by comma, in increasing order) to set positions to show ads on each page. These numbers must be smaller than "Posts Per Page" value', "content-views-query-and-display-post-page" ),
 					'condition' => [
@@ -2727,7 +2729,7 @@ return [
 				],
 				"adPerPage" =>
 				[
-					'label'	 => __( 'Ads Per Page', 'content-views-pro' ),
+					'label'	 => __( 'Ads Per Page', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::NUMBER,
 					'default' => 1,
 					'min' => 1,
@@ -2738,7 +2740,7 @@ return [
 				],
 				"adRepeat" =>
 				[
-					'label'	 => __( 'Repeat Ads', 'content-views-pro' ),
+					'label'	 => __( 'Repeat Ads', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::NUMBER,
 					'default' => 1,
 					'min' => 1,
@@ -2850,14 +2852,14 @@ return [
 			return [
 				"showShare" =>
 				[
-					'label'	 => __( 'Show sharing buttons', 'content-views-pro' ),
+					'label'	 => __( 'Show sharing buttons', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'_cv_pro_control'	 => true,
 					'description'		 => $this->_prolink( "showShare", __( "See Demo", "content-views-query-and-display-post-page" ), 'https://contentviewspro.com/demo/social-sharing/', false ),
 				],
 				"shareBtn" =>
 				[
-					'label'		 => __( 'Select Buttons', 'content-views-pro' ),
+					'label'		 => __( 'Select Buttons', 'content-views-query-and-display-post-page' ),
 					'type'		 => \Elementor\Controls_Manager::SELECT2,
 					'options'	 => ContentViews_Elementor_Widget::_get_options( 'social_btns' ),
 					'default'	 => [ 'facebook', 'twitter' ],
@@ -2869,7 +2871,7 @@ return [
 				],
 				"shareCircle" =>
 				[
-					'label'	 => __( 'Use circle buttons', 'content-views-pro' ),
+					'label'	 => __( 'Use circle buttons', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'condition' => [
 						'showShare' => 'yes',
@@ -2877,7 +2879,7 @@ return [
 				],
 				"shareCount" =>
 				[
-					'label'	 => __( 'Show share count', 'content-views-pro' ),
+					'label'	 => __( 'Show share count', 'content-views-query-and-display-post-page' ),
 					'type'	 => \Elementor\Controls_Manager::SWITCHER,
 					'condition' => [
 						'showShare' => 'yes',

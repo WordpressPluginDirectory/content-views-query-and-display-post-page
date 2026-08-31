@@ -30,7 +30,7 @@ function cv_sanitize_vid( $view_id ) {
  * @return string
  */
 function cv_sanitize_html_data( $data ) {
-	return strip_tags( $data );
+	return wp_strip_all_tags( $data );
 }
 
 /**

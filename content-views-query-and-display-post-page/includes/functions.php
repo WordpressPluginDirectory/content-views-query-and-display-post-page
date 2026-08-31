@@ -199,6 +199,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			}
 			// Don't use uniqid(), it will cause bug when multiple elements have same ID
 			$str	 = '0123456789abcdefghijklmnopqrstuvwxyz';
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.rand_mt_rand -- We just generate ID for HTML element
 			$rand	 = substr( md5( mt_rand() ), 0, 7 ) . substr( str_shuffle( $str ), 0, 3 );
 
 			PT_CV_Functions::$prev_random_string = $rand;
@@ -312,6 +313,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			 * @since 1.9.5
 			 */
 			$text = str_replace( array( '\xC2\xA0', '&nbsp;' ), ' ', $text );
+			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			if ( strpos( _x( 'words', 'Word count type. Do not translate!' ), 'characters' ) === 0 && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
 				$text		 = trim( preg_replace( "/[\n\r\t ]+/", ' ', $text ), ' ' );
 				preg_match_all( '/./u', $text, $words_array );
@@ -560,10 +562,13 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			// Query view which has view id = $meta_id
 			$pt_query = new WP_Query(
 				array(
+				// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams
 				'suppress_filters'	 => true,
 				'post_type'			 => PT_CV_POST_TYPE,
 				'post_status'		 => 'publish',
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 				'meta_key'			 => PT_CV_META_ID,
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 				'meta_value'		 => cv_esc_sql( $meta_id ),
 				'cv_get_view'		 => true,
 				)
@@ -631,8 +636,15 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 		 */
 		static function view_process_settings( $view_id, $settings, $pargs = array(), $sc_params = NULL ) {
 			if ( !defined( 'PT_CV_DOING_PREVIEW' ) && empty( $settings[ PT_CV_PREFIX . 'view-type' ] ) ) {
+				// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 				return sprintf( __( 'Error: View %s may not exist', 'content-views-query-and-display-post-page' ), "<strong>$view_id</strong>" );
 			}
+
+			// Do this for all cases
+			if ( isset( $settings[ PT_CV_PREFIX . 'post_status' ] ) ) {
+				$settings[ PT_CV_PREFIX . 'post_status' ] = self::refine_status( $settings );
+			}
+
 
 			do_action( PT_CV_PREFIX_ . 'view_process_start' );
 
@@ -807,6 +819,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			$args = array(
 				'post_type'		 => apply_filters( PT_CV_PREFIX_ . 'post_type', $content_type ),
 				'post_status'	 => apply_filters( PT_CV_PREFIX_ . 'post_status', array( 'publish' ) ),
+				// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- This is our post exclusion feature
 				'post__not_in'	 => array(),
 			);
 
@@ -822,8 +835,10 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			$post_not_in = PT_CV_Functions::setting_value( PT_CV_PREFIX . 'post__not_in', $view_settings );
 			$post_not_in = array_filter( PT_CV_Functions::string_to_array( $post_not_in ) );
 			if ( $post_not_in ) {
+				// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- This is our post exclusion feature
 				$args[ 'post__not_in' ] = array_map( 'intval', $post_not_in );
 			}
+			// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- This is our post exclusion feature
 			$args[ 'post__not_in' ] = apply_filters( PT_CV_PREFIX_ . 'post__not_in', $args[ 'post__not_in' ], $view_settings );
 
 			// Parent page
@@ -834,6 +849,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 				}
 			}
 
+			// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams
 			$args[ 'suppress_filters' ] = true;
 
 			PT_CV_Functions::view_get_advanced_settings( $args, $content_type );
@@ -953,6 +969,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 								$tax_settings[ 'relation' ] = PT_CV_Functions::setting_value( PT_CV_PREFIX . 'taxonomy-relation', $view_settings, 'AND' );
 							}
 
+							// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- This is our taxonomy filter feature
 							$args = array_merge( $args, array( 'tax_query' => apply_filters( PT_CV_PREFIX_ . 'taxonomy_setting', $tax_settings ) ) );
 							break;
 
@@ -1102,13 +1119,13 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 				return;
 			}
 
-			if ( !isset( $_POST[ PT_CV_PREFIX_ . 'form_nonce' ] ) || !wp_verify_nonce( $_POST[ PT_CV_PREFIX_ . 'form_nonce' ], PT_CV_PREFIX_ . 'view_submit' ) ) {
+			if ( !isset( $_POST[ PT_CV_PREFIX_ . 'form_nonce' ] ) || !wp_verify_nonce( sanitize_key( wp_unslash( $_POST[ PT_CV_PREFIX_ . 'form_nonce' ] ) ), PT_CV_PREFIX_ . 'view_submit' ) ) {
 				return;
 			}
 
 			// Insert View
-			$title	 = cv_esc_sql( $_POST[ PT_CV_PREFIX . 'view-title' ] );
-			$cur_pid = cv_esc_sql( $_POST[ PT_CV_PREFIX . 'post-id' ] );
+			$title	 = isset( $_POST[ PT_CV_PREFIX . 'view-title' ] ) ? sanitize_text_field( wp_unslash( $_POST[ PT_CV_PREFIX . 'view-title' ] ) ) : '';
+			$cur_pid = isset( $_POST[ PT_CV_PREFIX . 'post-id' ] ) ? absint( wp_unslash( $_POST[ PT_CV_PREFIX . 'post-id' ] ) ) : 0;
 			if ( !$cur_pid ) {
 				$post_id = PT_CV_Functions::post_insert( array( 'ID' => 0, 'title' => $title ) );
 			} else {
@@ -1116,6 +1133,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			}
 
 			// Add/Update View data
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized in cv_sanitize_vid
 			$view_id = empty( $_POST[ PT_CV_PREFIX . 'view-id' ] ) ? PT_CV_Functions::string_random() : cv_sanitize_vid( $_POST[ PT_CV_PREFIX . 'view-id' ] );
 			update_post_meta( $post_id, PT_CV_META_ID, $view_id );
 			update_post_meta( $post_id, PT_CV_META_SETTINGS, apply_filters( PT_CV_PREFIX_ . 'pre_save_view_data', $_POST ) );
@@ -1128,6 +1146,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			$edit_link = PT_CV_Functions::view_link( $view_id );
 			?>
 			<script type="text/javascript">
+				<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in esc_url() ?>
 				window.location = '<?php echo str_replace( '&#038;', '&', esc_url( $edit_link ) ); ?>';
 			</script>
 			<?php
@@ -1152,6 +1171,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 				$result = apply_filters( PT_CV_PREFIX_ . 'view_shortcode_output', null, $atts );
 				if ( empty( $result ) ) {
 					$settings	 = PT_CV_Functions::view_get_settings( $id );
+					unset( $settings[ PT_CV_PREFIX . 'rebuild' ] );
 					$view_html	 = PT_CV_Functions::view_process_settings( $id, $settings, null, $atts );
 					$result		 = PT_CV_Functions::view_final_output( $view_html );
 					do_action( PT_CV_PREFIX_ . 'flushed_output', $result );
@@ -1206,12 +1226,20 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			// Validate request
 			check_ajax_referer( PT_CV_PREFIX_ . 'ajax_nonce', 'ajax_nonce' );
 
+			// Prevent unauthorized access
+			$required_role = current_user_can( 'administrator' ) || current_user_can( PT_CV_Functions::get_option_value( 'access_role', 'administrator' ) );
+			if ( !$required_role ) {
+				wp_send_json_error( 'No permission' );
+			}
+
 			if ( !empty( $_POST[ 'data' ] ) ) {
 				define( 'PT_CV_DOING_PREVIEW', true );
 				do_action( PT_CV_PREFIX_ . 'preview_header' );
 
 				$settings = array();
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- $settings is sanitized later, before it's used.
 				parse_str( $_POST[ 'data' ], $settings );
+
 
 				$view_id = cv_sanitize_vid( PT_CV_Functions::url_extract_param( 'id' ) );
 				if ( empty( $view_id ) ) {
@@ -1220,7 +1248,11 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 
 				$settings = apply_filters( PT_CV_PREFIX_ . 'preview_settings', $settings, $view_id );
 
+				// Prevent this value from being used in preview
+				unset( $settings[ PT_CV_PREFIX . 'rebuild' ] );
+
 				// Show output
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in view_process_settings
 				echo PT_CV_Functions::view_process_settings( $view_id, $settings );
 
 				do_action( PT_CV_PREFIX_ . 'preview_footer' );
@@ -1237,22 +1269,25 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			// Validate request
 			#check_ajax_referer( PT_CV_PREFIX_ . 'ajax_nonce', 'ajax_nonce' ); //disabled since 1.7.9 due to output -1 when use cache plugin, or nonce expired
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- We simply check if parameter is missing to return early
 			if ( !isset( $_POST[ 'sid' ] ) )
 				return 'Empty View ID';
 
 			define( 'PT_CV_DOING_PAGINATION', true );
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- sanitized in cv_sanitize_vid
 			$view_id	 = cv_sanitize_vid( $_POST[ 'sid' ] );
 			$settings	 = cv_comp_pagination_settings( 'get', NULL );
 			if ( !$settings ) {
 				$settings = PT_CV_Functions::view_get_settings( $view_id );
 			}
 
-			// Switch language
-			$language = empty( $_POST[ 'lang' ] ) ? '' : cv_esc_sql( $_POST[ 'lang' ] );
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Switch language
+			$language = empty( $_POST[ 'lang' ] ) ? '' : sanitize_text_field( wp_unslash( $_POST[ 'lang' ] ) );
 			self::switch_language( $language );
 
 			// Show output
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated  -- Output escaped in view_process_settings
 			echo PT_CV_Functions::view_process_settings( $view_id, $settings, array( 'page' => absint( $_POST[ 'page' ] ) ) );
 
 			// Must exit
@@ -1301,9 +1336,8 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 
 			// Get old params
 			foreach ( array( 'vpage', '_page' ) as $op ) {
-				if ( !empty( $_GET[ $op ] ) ) {
-					$paged = absint( $_GET[ $op ] );
-				}
+				//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We are not processing form information.
+				if ( !empty( $_GET[ $op ] ) ) { $paged = absint( $_GET[ $op ] ); }
 			}
 
 			// Get WP parameter
@@ -1353,7 +1387,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 
 			if ( $dargs[ 'pagination-settings' ][ 'type' ] === 'normal' ) {
 				return true;
-			} else if ( !(defined( 'DOING_AJAX' ) && DOING_AJAX && !empty( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'pagination_request') ) {
+			} else if ( !(defined( 'DOING_AJAX' ) && DOING_AJAX && !empty( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'pagination_request') ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- We simply compare to a set value to return bool
                 // Not requested by Ajax => show pagination
                 return true;
 			} else {
@@ -1440,12 +1474,14 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 		 */
 		static function url_extract_param( $pname, $default = null ) {
 			$query	 = array();
-			$url	 = $_SERVER[ 'REQUEST_URI' ];
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- will be parsed afterwards
+			$url	 = isset( $_SERVER[ 'REQUEST_URI' ] ) ? wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) : '';
 			if ( strpos( $url, 'admin-ajax.php' ) !== false ) {
-				$url = $_SERVER[ 'HTTP_REFERER' ];
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- will be parsed afterwards
+				$url = isset( $_SERVER[ 'HTTP_REFERER' ] ) ? wp_unslash( $_SERVER[ 'HTTP_REFERER' ] ) : '';
 			}
 
-			$parts = parse_url( $url );
+			$parts = wp_parse_url( $url );
 			if ( isset( $parts[ 'query' ] ) ) {
 				parse_str( $parts[ 'query' ], $query );
 
@@ -1580,6 +1616,58 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 
 		static function has_pro() {
 			return class_exists( 'PT_Content_Views_Pro' ) || get_option( 'pt_cv_version_pro' );
+		}
+
+		/**
+		 * Prevent users without permission from previewing non-public posts.
+		 * @since 4.5.1
+		 * @return array Allowed statuses
+		 */
+		static function refine_status( $settings ) {
+			// Selected post statuses.
+			$selected_statuses = (array) $settings[ PT_CV_PREFIX . 'post_status' ];
+
+			// Only check capabilities if needed.
+			// Prevent Contributors/Authors from seeing unpublished posts of others, but also prevent seeing their own unpublished posts
+			$edit_statuses	 = array( 'draft', 'pending', 'future', 'auto-draft', 'inherit', 'trash' );
+			$need_edit		 = (bool) array_intersect( $edit_statuses, $selected_statuses );
+			$can_edit		 = $need_edit ? current_user_can( 'edit_others_posts' ) : true;
+
+			// Pull all registered statuses
+			$registered_statuses = get_post_stati( array(), 'objects' );
+
+			// Validate selected statuses.
+			$allowed_statuses = array();
+
+			foreach ( $selected_statuses as $status ) {
+
+				// Unrecognized status is refused
+				if ( !isset( $registered_statuses[ $status ] ) ) {
+					continue;
+				}
+
+				$allow		 = false;
+				$status_obj	 = $registered_statuses[ $status ];
+
+				if ( 'publish' === $status ) {
+					$allow = true;
+				} elseif ( 'private' === $status || !empty( $status_obj->private ) ) {
+					$allow = current_user_can( 'read_private_posts' );
+				} elseif ( in_array( $status, $edit_statuses ) ) {
+					$allow = $can_edit;
+				} elseif ( !empty( $status_obj->public ) ) {
+					$allow = true;
+				} else {
+					// non-public custom statuses
+					$allow = current_user_can( 'edit_others_posts' );
+				}
+
+				if ( $allow ) {
+					$allowed_statuses[] = $status;
+				}
+			}
+
+			return !empty( $allowed_statuses ) ? $allowed_statuses : array( 'publish' );
 		}
 
 	}

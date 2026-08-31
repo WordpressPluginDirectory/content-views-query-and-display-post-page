@@ -18,6 +18,7 @@ class ContentViews_Elementor_Control_Creatable extends Base_Data_Control {
 		wp_localize_script(
 		'contentviews-creatable', 'contentviews_creatable_localize', [
 			'ajaxurl' => esc_url( admin_url( 'admin-ajax.php' ) ),
+			'el_nonce'    => wp_create_nonce( 'el_search_action' )
 		]
 		);
 		wp_enqueue_script( 'contentviews-creatable' );

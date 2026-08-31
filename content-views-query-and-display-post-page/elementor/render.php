@@ -31,6 +31,9 @@ if ( !class_exists( 'ContentViews_Elementor_Render' ) ) {
 
 			self::show_widget_id( $view_id );
 
+			unset( $settings[ PT_CV_PREFIX . 'rebuild' ] );
+
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in view_process_settings
 			echo PT_CV_Functions::view_process_settings( $view_id, $settings );
 
 			// maybe need view_final_output();
@@ -43,6 +46,7 @@ if ( !class_exists( 'ContentViews_Elementor_Render' ) ) {
 
 			$style		 = $field_css	 = '';
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped before.
 			echo "<div class='$class'> $output </div> $style";
 		}
 
@@ -106,6 +110,7 @@ if ( !class_exists( 'ContentViews_Elementor_Render' ) ) {
 			}
 
 			$settings[ PT_CV_PREFIX . 'post__in' ]		 = self::values_from_widget( $data, 'includeId', '' );
+			// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- This is our post exclusion feature
 			$settings[ PT_CV_PREFIX . 'post__not_in' ]	 = self::values_from_widget( $data, 'excludeId', '' );
 
 			$settings[ PT_CV_PREFIX . 'author__in' ]							 = self::values_from_widget( $data, 'author', '' );

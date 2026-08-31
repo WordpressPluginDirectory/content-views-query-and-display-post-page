@@ -182,10 +182,12 @@ if ( !class_exists( 'PT_CV_Asset' ) ) {
 
 			switch ( $type ) {
 				case 'js':
-					printf( "<script type='text/javascript' src='%s'></script>", $src );
+					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- Only used on our settings page
+					printf( "<script type='text/javascript' src='%s'></script>", esc_url( $src ) );
 					break;
 
 				case 'css':
+					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Only used on our settings page
 					printf( "<link rel='stylesheet' id='%s' href='%s' type='text/css' media='all' />", esc_attr( $handle ), esc_url( $src ) );
 					break;
 			}

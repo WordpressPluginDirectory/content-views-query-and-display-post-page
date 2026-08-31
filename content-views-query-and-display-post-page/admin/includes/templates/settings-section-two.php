@@ -8,6 +8,7 @@ $file_path = PT_CV_PATH . 'admin/views/dashboard.php';
 
 $text = PT_CV_Functions::file_include_content( $file_path );
 
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted HTML from plugin file.
 echo strip_tags( $text, '<style><div><h3><p><ul><li><h4><a>' );
 ?>
 

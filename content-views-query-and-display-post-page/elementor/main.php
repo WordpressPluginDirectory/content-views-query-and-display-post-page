@@ -135,18 +135,21 @@ if ( !class_exists( 'ContentViews_Elementor_Init' ) ) {
 
 		// Add editor/control styles
 		public function add_editor_styles() {
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			wp_register_style( 'contentviews-for-controls', plugins_url( 'assets/css/widget.css', __FILE__ ) );
 			wp_enqueue_style( 'contentviews-for-controls' );
 		}
 
 		// Add editor/control scripts
 		public function add_editor_scripts() {
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
 			wp_register_script( 'contentviews-js-controls', plugins_url( 'assets/js/widget.js', __FILE__ ) );
 			wp_enqueue_script( 'contentviews-js-controls' );
 		}
 
 		// Add Preview styles
 		public function add_preview_styles() {
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			wp_register_style( 'contentviews-for-preview', plugins_url( 'assets/css/preview.css', __FILE__ ) );
 			wp_enqueue_style( 'contentviews-for-preview' );
 		}

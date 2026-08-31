@@ -11,6 +11,7 @@ registerBlockType( 'content-views/block', {
 	icon: 'shortcode',
 	category: 'widgets',
 	keywords: ContentViewsBlock.texts.keywords,
+	apiVersion: 3,
 
 	attributes: {
 		viewId: {

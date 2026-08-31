@@ -22,21 +22,24 @@ preg_match( '/href="([^"]+)"/', $heading, $matches );
 $href	 = !empty( $matches[ 1 ] ) ? "href='" . esc_url( $matches[ 1 ] ) . "' onclick='event.preventDefault()'" : '';
 ?>
 
-<div class="panel-heading <?php echo PT_CV_PREFIX . 'title'; ?>">
-    <a class="panel-title" data-toggle="cvcollapse" data-parent="#<?php echo esc_attr( PT_CV_PREFIX_UPPER . 'ID' ); ?>" data-target="#<?php echo esc_attr( $random_id ); ?>" <?php echo $href; ?>>
+<div class="panel-heading <?php echo esc_attr( PT_CV_PREFIX . 'title' ); ?>">
+    <a class="panel-title" data-toggle="cvcollapse" data-parent="#<?php echo esc_attr( PT_CV_PREFIX_UPPER . 'ID' ); ?>" data-target="#<?php echo esc_attr( $random_id ); ?>" <?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above */ echo $href; ?>>
 		<?php
 		// Remove title wrapper and anchor tags, remain original post's title
 		$tt = tag_escape( PT_CV_Functions::setting_value( PT_CV_PREFIX . 'field-title-tag' ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in preg_replace
 		echo preg_replace( array( '/<(' . $tt . '|a)[^>]*>/i', '/<\/(' . $tt . '|a)>/i' ), '', $heading );
 		?>
 	</a>
 	<?php
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in the filter
 	echo apply_filters( PT_CV_PREFIX_ . 'scrollable_toggle_icon', '' );
 	?>
 </div>
 <div id="<?php echo esc_attr( $random_id ); ?>" class="panel-collapse collapse <?php echo esc_attr( PT_CV_PREFIX_UPPER . 'CLASS' ); ?>">
 	<div class="panel-body">
 		<?php
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- output escaped before.
 		echo implode( "\n", $fields_html );
 		?>
 	</div>

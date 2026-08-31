@@ -71,7 +71,7 @@ if ( !class_exists( 'PT_CV_BlockToView' ) ) {
 		}
 
 		static function action_admin_view_header() {
-			echo sprintf( '<button type="button" id="view-library-button" class="btn btn-primary" data-toggle="modal" data-target="#cv-library-toview" style="float: right;"><image src="%s" style="max-height: 20px"/>%s </button>', plugins_url( 'block/assets/layouts/', PT_CV_FILE ) . 'icons/icon.svg', __( 'Content Views Library', 'content-views-query-and-display-post-page' ) );
+			echo sprintf( '<button type="button" id="view-library-button" class="btn btn-primary" data-toggle="modal" data-target="#cv-library-toview" style="float: right;"><image src="%s" style="max-height: 20px"/>%s </button>', esc_url( plugins_url( 'block/assets/layouts/', PT_CV_FILE ) . 'icons/icon.svg' ), esc_html__( 'Content Views Library', 'content-views-query-and-display-post-page' ) );
 			echo '<div class="modal fade" id="cv-library-toview" tabindex="-1"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> </div> <div class="modal-body"></div> </div> </div> </div>';
 		}
 
@@ -80,6 +80,7 @@ if ( !class_exists( 'PT_CV_BlockToView' ) ) {
 			if ( $layout && PT_CV_Values::isprlayout( $layout ) ) {
 				$url = esc_url( 'https://www.contentviewspro.com/?utm_source=client&utm_medium=preview&utm_campaign=proLayout&utm_content=' . $layout );
 				$css = '<style>#pt-cv-preview-box .pt-cv-view {margin: 0 !important} .pt-cv-pagination-wrapper, .pt-cv-heading-container, .pt-cv-no-post {display: none !important}</style>';
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above
 				printf( '<p class="cvgopro">To access this PRO layout, please %s upgrade now %s</p>%s', '<a href="' . $url . '" onclick="window.open(\'' . $url . '\')">', '</a>', $css );
 			}
 		}
@@ -343,12 +344,14 @@ if ( !class_exists( 'PT_CV_BlockToView' ) ) {
 
 			// Print inline style
 			if ( !empty( $style ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo PT_CV_Html::inline_style( $style );
 			}
 
 			$view_style = ob_get_clean();
 
 			if ( apply_filters( PT_CV_PREFIX_ . 'inline_view_style', 1 ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $view_style;
 			} else {
 				global $cvp_view_css;
@@ -392,12 +395,12 @@ if ( !class_exists( 'PT_CV_BlockToView' ) ) {
 		// Extra
 		static function thumb_wh( $with_sm = false, $key_only = false ) {
 			$arr = [
-				[ __( 'Width' ), 'thumbnailMaxWidth', 'thumbnailMaxWidthUnits' ],
-				[ __( 'Height' ), 'thumbnailHeight', 'thumbnailHeightUnits' ],
+				[ __( 'Width', 'content-views-query-and-display-post-page' ), 'thumbnailMaxWidth', 'thumbnailMaxWidthUnits' ],
+				[ __( 'Height', 'content-views-query-and-display-post-page' ), 'thumbnailHeight', 'thumbnailHeightUnits' ],
 			];
 			if ( $with_sm ) {
-				$arr[]	 = [ __( 'Width (For Other Posts)' ), 'thumbnailsmMaxWidth', 'thumbnailsmMaxWidthUnits' ];
-				$arr[]	 = [ __( 'Height (For Other Posts)' ), 'thumbnailsmHeight', 'thumbnailsmHeightUnits' ];
+				$arr[]	 = [ __( 'Width (For Other Posts)', 'content-views-query-and-display-post-page' ), 'thumbnailsmMaxWidth', 'thumbnailsmMaxWidthUnits' ];
+				$arr[]	 = [ __( 'Height (For Other Posts)', 'content-views-query-and-display-post-page' ), 'thumbnailsmHeight', 'thumbnailsmHeightUnits' ];
 			}
 
 			if ( $key_only ) {

@@ -105,7 +105,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				// Order
 				apply_filters( PT_CV_PREFIX_ . 'orders', array(
 					'label'	 => array(
-						'text' => __( 'Order' ),
+						'text' => __( 'Order', 'content-views-query-and-display-post-page' ),
 					),
 					'params' => array(
 						array(
@@ -147,7 +147,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 						array(
 							'type'		 => 'checkbox',
 							'name'		 => 'enable-pagination',
-							'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable' ) ),
+							'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable', 'content-views-query-and-display-post-page' ) ),
 							'std'		 => '',
 						),
 					),
@@ -168,6 +168,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 							'name'			 => $prefix . 'items-per-page',
 							'std'			 => '5',
 							'placeholder'	 => 'for example: 5',
+							// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 							'desc'			 => sprintf( __( 'If value of the %s setting is not empty, this value should be smaller than that', 'content-views-query-and-display-post-page' ), sprintf( '<code>%s</code>', __( 'Limit', 'content-views-query-and-display-post-page' ) ) ),
 						),
 					),
@@ -176,7 +177,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				// Pagination Type
 				array(
 					'label'		 => array(
-						'text' => __( 'Type' ),
+						'text' => __( 'Type', 'content-views-query-and-display-post-page' ),
 					),
 					'params'	 => array(
 						array(
@@ -253,6 +254,11 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 					),
 				),
 
+			);
+
+			$result = apply_filters( PT_CV_PREFIX_ . 'settings_other', $result, $prefix );
+
+			array_push( $result,
 				array(
 					'label'	 => array(
 						'text' => __( 'When no posts found', 'content-views-query-and-display-post-page' ),
@@ -282,7 +288,6 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				)
 			);
 
-			$result = apply_filters( PT_CV_PREFIX_ . 'settings_other', $result, $prefix );
 
 			return $result;
 		}
@@ -320,7 +325,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				get_option( 'pt_cv_version_pro' ) ? apply_filters( PT_CV_PREFIX_ . 'settings_title_display', array(), $prefix, $prefix2 ) :
 					array(
 					'label'			 => array(
-						'text' => __( 'Title' ),
+						'text' => __( 'Title', 'content-views-query-and-display-post-page' ),
 					),
 					'extra_setting'	 => array(
 						'params' => array(
@@ -343,7 +348,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				// Thumbnail settings
 				array(
 					'label'			 => array(
-						'text' => __( 'Thumbnail' ),
+						'text' => __( 'Thumbnail', 'content-views-query-and-display-post-page' ),
 					),
 					'extra_setting'	 => array(
 						'params' => array(
@@ -362,7 +367,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				// Content settings
 				array(
 					'label'			 => array(
-						'text' => __( 'Content' ),
+						'text' => __( 'Content', 'content-views-query-and-display-post-page' ),
 					),
 					'extra_setting'	 => array(
 						'params' => array(
@@ -503,7 +508,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 														array(
 															'type'		 => 'checkbox',
 															'name'		 => $prefix . 'excerpt-readmore',
-															'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable' ) ),
+															'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable', 'content-views-query-and-display-post-page' ) ),
 															'std'		 => 'yes',
 														),
 													),
@@ -516,7 +521,9 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 														array(
 															'type'	 => 'text',
 															'name'	 => $prefix . 'excerpt-readmore-text',
+															// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 															'std'	 => ucwords( rtrim( __( 'Read more...' ), '.' ) ),
+															// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 															'desc'	 => sprintf( __( 'To change color of this button, <a href="%s" target="_blank"> please check this document </a>', 'content-views-query-and-display-post-page' ), 'http://docs.contentviewspro.com/change-color-read-more-button/?utm_source=client&utm_medium=read-more-color&utm_campaign=gopro' ),
 														),
 													),
@@ -700,7 +707,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 						array(
 							'type'		 => 'checkbox',
 							'name'		 => $prefix . 'meta-fields',
-							'options'	 => PT_CV_Values::yes_no( 'yes', sprintf( '%s (%s, %s, %s, %s)', __( 'Show Meta Fields', 'content-views-query-and-display-post-page' ), __( 'Taxonomy', 'content-views-query-and-display-post-page' ), __( 'Author' ), __( 'Date' ), __( 'Comment' ) ) ),
+							'options'	 => PT_CV_Values::yes_no( 'yes', sprintf( '%s (%s, %s, %s, %s)', __( 'Show Meta Fields', 'content-views-query-and-display-post-page' ), __( 'Taxonomy', 'content-views-query-and-display-post-page' ), __( 'Author', 'content-views-query-and-display-post-page' ), __( 'Date', 'content-views-query-and-display-post-page' ), __( 'Comment', 'content-views-query-and-display-post-page' ) ) ),
 							'std'		 => '',
 						),
 					),
@@ -727,7 +734,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				// Size
 				array(
 					'label'	 => array(
-						'text' => __( 'Size' ),
+						'text' => __( 'Size', 'content-views-query-and-display-post-page' ),
 					),
 					'params' => array(
 						array(
@@ -819,7 +826,8 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 						array(
 							'type'		 => 'checkbox',
 							'name'		 => $prefix . 'taxonomy',
-							'options'	 => PT_CV_Values::yes_no( 'yes', sprintf( __( 'Show Taxonomies (%s, %s...)', 'content-views-query-and-display-post-page' ), __( 'Categories' ), __( 'Tags' ) ) ),
+							// phpcs:ignore WordPress.WP.I18n
+							'options'	 => PT_CV_Values::yes_no( 'yes', sprintf( __( 'Show Taxonomies (%s, %s...)', 'content-views-query-and-display-post-page' ), __( 'Categories', 'content-views-query-and-display-post-page' ), __( 'Tags', 'content-views-query-and-display-post-page' ) ) ),
 							'std'		 => 'yes',
 						),
 					),
@@ -1077,7 +1085,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				self::hybrid_variants( $prefix ),
 				$columns ? array(
 					'label'	 => array(
-						'text' => __( 'Items per row', 'content-views-pro' ),
+						'text' => __( 'Items per row', 'content-views-query-and-display-post-page' ),
 					),
 					'params' => array(
 						array(
@@ -1114,6 +1122,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				'params'		 => array(
 					array(
 						'type'		 => 'html',
+						// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 						'content'	 => sprintf( '<p class="alert alert-danger" style="display: inline-block"><strong>%s</strong>.</p>', sprintf( __( 'This layout requires PRO version %s or higher', 'content-views-query-and-display-post-page' ), $require_pro ) ),
 					),
 				),
@@ -1126,7 +1135,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 			$result = array(
 				array(
 					'label'	 => array(
-						'text' => __( 'Gap', 'content-views-pro' ),
+						'text' => __( 'Gap', 'content-views-query-and-display-post-page' ),
 					),
 					'params' => array(
 						array(
@@ -1140,7 +1149,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				),
 				array(
 					'label'			 => array(
-						'text' => __( 'Row Height', 'content-views-pro' ),
+						'text' => __( 'Row Height', 'content-views-query-and-display-post-page' ),
 					),
 					'extra_setting'	 => $extra,
 					'params'		 => array(
@@ -1155,13 +1164,13 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				),
 				array(
 					'label'	 => array(
-						'text' => __( 'Swap Position', 'content-views-pro' ),
+						'text' => __( 'Swap Position', 'content-views-query-and-display-post-page' ),
 					),
 					'params' => array(
 						array(
 							'type'		 => 'checkbox',
 							'name'		 => 'swapPosition',
-							'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable', 'content-views-pro' ) ),
+							'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable', 'content-views-query-and-display-post-page' ) ),
 							'std'		 => '',
 						),
 					),
@@ -1169,7 +1178,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				),
 				array(
 					'label'		 => array(
-						'text' => __( 'Big Item Width', 'content-views-pro' ),
+						'text' => __( 'Big Item Width', 'content-views-query-and-display-post-page' ),
 					),
 					'params'	 => array(
 						array(
@@ -1267,7 +1276,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 			return array(
 				array(
 					'label'			 => array(
-						'text' => __( 'Mode', 'content-views-pro' ),
+						'text' => __( 'Mode', 'content-views-query-and-display-post-page' ),
 					),
 					'extra_setting'	 => $extra,
 					'params'		 => array(
@@ -1282,9 +1291,10 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 						),
 					),
 				),
+				apply_filters( PT_CV_PREFIX_ . 'ovl_settings_extra', [] ),
 				array(
 					'label'		 => array(
-						'text' => __( 'Text Position', 'content-views-pro' ),
+						'text' => __( 'Text Position', 'content-views-query-and-display-post-page' ),
 					),
 					'params'	 => array(
 						array(
@@ -1298,7 +1308,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 				),
 				array(
 					'label'	 => array(
-						'text' => __( 'Overlay Type', 'content-views-pro' ),
+						'text' => __( 'Overlay Type', 'content-views-query-and-display-post-page' ),
 					),
 					'extra_setting'	 => $extra,
 					'params' => array(
@@ -1338,7 +1348,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 						array(
 							'type'		 => 'checkbox',
 							'name'		 => 'overlayClickable',
-							'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable' ) ),
+							'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable', 'content-views-query-and-display-post-page' ) ),
 							'std'		 => get_option( 'pt_cv_version_pro' ) ? 'yes' : '',
 						),
 					),
@@ -1363,7 +1373,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 					array(
 						'type'		 => 'checkbox',
 						'name'		 => $name,
-						'options'	 => PT_CV_Values::yes_no( 'yes', $skip_label ? $text : __( 'Enable' ) ),
+						'options'	 => PT_CV_Values::yes_no( 'yes', $skip_label ? $text : __( 'Enable', 'content-views-query-and-display-post-page' ) ),
 						'std'		 => 'yes',
 					),
 				),
@@ -1403,7 +1413,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 
 			$args = array(
 				'label'			 => array(
-					'text' => __( 'Top Meta' ),
+					'text' => __( 'Top Meta', 'content-views-query-and-display-post-page' ),
 				),
 				'extra_setting'	 => array(
 					'params' => array(
@@ -1416,7 +1426,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 						'params' => array(
 							array(
 								'label'	 => array(
-									'text' => __( 'Select Meta', 'content-views-pro' ),
+									'text' => __( 'Select Meta', 'content-views-query-and-display-post-page' ),
 								),
 								'extra_setting'	 => $extra,
 								'params' => array(
@@ -1430,7 +1440,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 							),
 							array(
 								'label'	 => array(
-									'text' => __( 'Taxonomy', 'content-views-pro' ),
+									'text' => __( 'Taxonomy', 'content-views-query-and-display-post-page' ),
 								),
 								'extra_setting'	 => $extra,
 								'params' => array(
@@ -1445,7 +1455,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 							),
 							array(
 								'label'		 => array(
-									'text' => __( 'Position', 'content-views-pro' ),
+									'text' => __( 'Position', 'content-views-query-and-display-post-page' ),
 								),
 								'params'	 => array(
 									array(
@@ -1456,7 +1466,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 									),
 								),
 							),
-							PT_CV_Settings::others_settings( 'show-field-taxoterm-Others', __( 'For Other Posts', 'content-views-pro' ) ),
+							PT_CV_Settings::others_settings( 'show-field-taxoterm-Others', __( 'For Other Posts', 'content-views-query-and-display-post-page' ) ),
 						),
 					),
 				),
@@ -1483,7 +1493,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 							$args
 						),
 					),
-					PT_CV_Settings::others_settings( 'show-field-content-Others', __( 'For Other Posts', 'content-views-pro' ) ),
+					PT_CV_Settings::others_settings( 'show-field-content-Others', __( 'For Other Posts', 'content-views-query-and-display-post-page' ) ),
 				),
 			);
 		}
@@ -1508,7 +1518,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 		}
 
 		static function readmore_extra_settings( $args ) {
-			return PT_CV_Settings::others_settings( 'show-field-readmore-Others', __( 'Enable For Other Posts', 'content-views-pro' ), true, get_option( 'pt_cv_version_pro' ) ? 12 : 10 );
+			return PT_CV_Settings::others_settings( 'show-field-readmore-Others', __( 'Enable For Other Posts', 'content-views-query-and-display-post-page' ), true, get_option( 'pt_cv_version_pro' ) ? 12 : 10 );
 		}
 
 		static function metafield_extra_settings( $args ) {
@@ -1525,7 +1535,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 					array(
 						'type'	 => 'group',
 						'params' => array(
-							PT_CV_Settings::others_settings( 'show-field-meta-fields-Others', __( 'For Other Posts', 'content-views-pro' ) ),
+							PT_CV_Settings::others_settings( 'show-field-meta-fields-Others', __( 'For Other Posts', 'content-views-query-and-display-post-page' ) ),
 							apply_filters( PT_CV_PREFIX_ . 'metafield_extra_settings_2', [] )
 						),
 					),
@@ -1548,10 +1558,11 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 			// Width, Height
 			$units			 = [ 'px', 'em', 'rem', '%', 'vw', 'vh' ];
 			$idx			 = 0;
-			$layouts_with_wh = array_values( array_diff( array_keys( PT_CV_Values::hybrid_layouts() ), PT_CV_Values::ovl_layouts() ) );
+			$layouts_with_wh = apply_filters( PT_CV_PREFIX_ . 'need_thumbwh', array_values( array_diff( array_keys( PT_CV_Values::hybrid_layouts() ), PT_CV_Values::ovl_layouts() ) ) );
 			foreach ( $layouts_with_wh as $layout ) {
-				$with_sm = in_array( $layout, [ 'onebig1', 'onebig2' ] ) ? true : false;
-				foreach ( PT_CV_BlockToView::thumb_wh( $with_sm ) as $ar1 ) {
+				$with_sm		 = in_array( $layout, PT_CV_Values::hasone_layouts() ) ? true : false;
+				$settings_list	 = apply_filters( PT_CV_PREFIX_ . 'settings_thumbwh', PT_CV_BlockToView::thumb_wh( $with_sm ), $layout );
+				foreach ( $settings_list as $ar1 ) {
 					$inserted = array(
 						'label'			 => array(
 							'text' => $ar1[ 0 ],
@@ -1594,7 +1605,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 								),
 							),
 						),
-						'dependence'	 => array( 'field-thumbnail-size', PT_CV_PREFIX . 'custom', '!=' ),
+						'dependence'	 => apply_filters( PT_CV_PREFIX_ . 'dependence_thumbwh', array( 'field-thumbnail-size', PT_CV_PREFIX . 'custom', '!=' ), $layout ),
 					);
 
 					array_splice( $args, 1 + $idx++, 0, array( $inserted ) );
@@ -1610,7 +1621,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 			// Effect
 			$args[] = array(
 				'label'		 => array(
-					'text' => __( 'Hover Effect' ),
+					'text' => __( 'Hover Effect', 'content-views-query-and-display-post-page' ),
 				),
 				'extra_setting'	 => $extra,
 				'params'	 => array(
@@ -1627,7 +1638,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 			if ( !get_option( 'pt_cv_version_pro' ) ) {
 				$args[] = array(
 					'label'			 => array(
-						'text' => __( 'Substitute Option' ),
+						'text' => __( 'Substitute Option', 'content-views-query-and-display-post-page' ),
 					),
 					'extra_setting'	 => $extra,
 					'params'		 => array(
@@ -1643,14 +1654,14 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 
 				$args[]	 = array(
 					'label'			 => array(
-						'text' => __( 'Lazy load' ),
+						'text' => __( 'Lazy load', 'content-views-query-and-display-post-page' ),
 					),
 					'extra_setting'	 => $extra,
 					'params'		 => array(
 						array(
 							'type'		 => 'checkbox',
 							'name'		 => $prefix . 'thumbnail-lazytmp',
-							'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable' ) ),
+							'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable', 'content-views-query-and-display-post-page' ) ),
 							'std'		 => '',
 						),
 					),
@@ -1659,7 +1670,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 
 				$args[] = array(
 					'label'	 => array(
-						'text' => __( 'Default image' ),
+						'text' => __( 'Default image', 'content-views-query-and-display-post-page' ),
 					),
 					'params' => array(
 						array(
@@ -1756,7 +1767,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 									array(
 										'type'		 => 'checkbox',
 										'name'		 => 'showHeading',
-										'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable' ) ),
+										'options'	 => PT_CV_Values::yes_no( 'yes', __( 'Enable', 'content-views-query-and-display-post-page' ) ),
 										'std'		 => '',
 										'desc'		 => __( 'Show custom text above the posts', 'content-views-query-and-display-post-page' ),
 									),

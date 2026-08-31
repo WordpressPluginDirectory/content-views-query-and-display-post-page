@@ -88,6 +88,7 @@ function contentviews_block_output( $attr ) {
 	}
 
 	$output = '';
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We simply compare to a set value.
 	$is_gb_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && !empty( $_REQUEST[ 'context' ] ) && $_REQUEST[ 'context' ] === 'edit';
 	if ( $is_gb_editor ) {
 		#$output .= '<p style="background:#ececec; text-align:center;">' . __( 'Some functions do not work here. Please preview this post to see fully functional output.', 'content-views-query-and-display-post-page' ) . '</p>';
@@ -124,6 +125,7 @@ function contentviews_get_views_list() {
 	);
 
 	$views = get_posts( array(
+		// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams
 		'suppress_filters'	 => true,
 		'post_type'			 => PT_CV_POST_TYPE,
 		'post_status'		 => 'publish',

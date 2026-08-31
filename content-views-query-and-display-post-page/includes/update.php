@@ -23,6 +23,7 @@ if ( $stored_version ) {
 	// Delete deprecated post meta
 	if ( version_compare( $stored_version, '2.3.2', '<' ) && cv_is_active_plugin( 'cornerstone' ) ) {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
 			"DELETE FROM $wpdb->postmeta WHERE meta_key = 'cv_comp_cornerstone_content'"
 		);
@@ -37,8 +38,8 @@ if ( $stored_version ) {
 	if ( version_compare( $stored_version, '1.9.9', '<' ) ) {
 		if ( !(defined( 'DOING_AJAX' ) && DOING_AJAX) ) {
 			global $wpdb;
-			$sql = "DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_timeout_pt-cv-%' OR option_name LIKE '_transient_pt-cv-%'";
-			$wpdb->query( $sql );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", '_transient_timeout_pt-cv-%', '_transient_pt-cv-%' ) );
 		}
 	}
 
@@ -46,6 +47,7 @@ if ( $stored_version ) {
 	if ( version_compare( $stored_version, '1.8.8.0', '<=' ) ) {
 		if ( !get_option( 'pt_cv_version_pro' ) ) {
 			global $wpdb;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query(
 				$wpdb->prepare(
 					"DELETE FROM $wpdb->postmeta WHERE meta_key = %s", '_' . PT_CV_PREFIX_ . 'view_count'

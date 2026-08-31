@@ -82,6 +82,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 				<div class="panel-heading">
 					<h4 class="panel-title">
 						<a class="pt-accordion-a" data-parent="#<?php echo esc_attr( $parent_id ); ?>" data-target="#<?php echo esc_attr( $id ); ?>">
+							<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped before. ?>
 							<?php echo $heading; ?>
 						</a>
 					</h4>
@@ -89,6 +90,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 				</div>
 				<div id="<?php echo esc_attr( $id ); ?>" class="panel-body <?php echo esc_attr( $class ); ?>">
 					<div class="panel-body">
+						<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped before. ?>
 						<?php echo $content; ?>
 					</div>
 				</div>
@@ -103,8 +105,9 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 		static function html_preview_box() {
 			ob_start();
 			?>
-			<div class="panel panel-default collapse <?php echo PT_CV_PREFIX; ?>wrapper" id="<?php echo PT_CV_PREFIX; ?>preview-box"></div>
+			<div class="panel panel-default collapse <?php echo esc_attr( PT_CV_PREFIX ); ?>wrapper" id="<?php echo esc_attr( PT_CV_PREFIX ); ?>preview-box"></div>
 			<div class="text-center hidden" style="position: absolute; left: 50%; top: 160px;">
+				<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped before. ?>
 				<?php echo self::html_loading_img(); ?>
 			</div>
 			<?php
@@ -254,6 +257,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 		}
 
 		static function no_post_found() {
+			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			return apply_filters( PT_CV_PREFIX_ . 'content_no_post_found_text', __( 'No posts found.' ) );
 		}
 
@@ -501,6 +505,11 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 
 		static function _field_readmore( $post, $fargs, $from = false ) {
 			if ( $from === 'content' && ContentViews_Block::is_pure_block() ) {
+				return '';
+			}
+
+			// shortcode + not from content + new layouts/ any layouts imported from library
+			if ( PT_CV_Functions::is_view() && !$from && ContentViews_Block::is_hybrid() ) {
 				return '';
 			}
 
@@ -951,6 +960,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 			<?php
 			$newline = "\n";
 			$format	 = $wrap ? "(function($){\$(function(){ {$newline}%s{$newline} });}(jQuery));" : '%s';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			printf( $format, $js );
 			?>
 			</script>
@@ -971,6 +981,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 
 			ob_start();
 			?>
+			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped before. ?>
 			<style type="text/css" id="<?php echo esc_attr( PT_CV_PREFIX . $prefix . '-style-' . $random_id ); ?>"><?php echo '' . $css; ?></style>
 			<?php
 			return ob_get_clean();
@@ -996,7 +1007,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 					$result = __( 'Read More', 'content-views-query-and-display-post-page' );
 				}
 			} else {
-				// WP translation
+				// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 				$result = ucwords( rtrim( __( 'Read more...' ), '.' ) );
 			}
 			return $result;
@@ -1011,6 +1022,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 
 			global $cv_pagination_bases;
 			if ( !empty( $cv_pagination_bases ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo "<script id='" . PT_CV_PREFIX . "append-scripts'>if( typeof PT_CV_PAGINATION !== 'undefined' ) { PT_CV_PAGINATION.links = $cv_pagination_bases; }
             </script>";
 			}

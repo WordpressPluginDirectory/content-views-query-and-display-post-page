@@ -339,6 +339,7 @@ function cv_comp_pagination_settings( $action, $view_settings ) {
 			set_transient( PT_CV_PREFIX . 'view-settings-' . $cv_unique_id, $view_settings, ($key === 'preview') ? HOUR_IN_SECONDS : 8 * HOUR_IN_SECONDS  );
 		}
 	} else if ( $action === 'get' ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- sanitized in cv_sanitize_vid
 		$cv_unique_id	 = cv_sanitize_vid( $_POST[ 'unid' ] );
 		$data			 = get_transient( PT_CV_PREFIX . 'view-settings-' . $cv_unique_id );
 		return unserialize( base64_decode( $data ) );

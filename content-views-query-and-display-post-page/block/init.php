@@ -77,7 +77,7 @@ if ( !class_exists( 'ContentViews_Block' ) ) {
 		function block_output( $block_attributes, $content ) {
 
 			$output = $style = '';
-
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We simply compare to a set value.
 			$is_gb_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && !empty( $_REQUEST[ 'context' ] ) && $_REQUEST[ 'context' ] === 'edit';
 
 			// For Editor only (to reduce re-render): force to show, then hide/show by editor CSS when toggle
@@ -105,6 +105,9 @@ if ( !class_exists( 'ContentViews_Block' ) ) {
 				$settings	 = $block_data[ 1 ];
 				$view_id	 = !empty( $block_attributes[ 'blockId' ] ) ? cv_sanitize_vid( $block_attributes[ 'blockId' ] ) : PT_CV_Functions::string_random();
 
+				unset( $settings[ PT_CV_PREFIX . 'rebuild' ] );
+
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in view_process_settings
 				echo PT_CV_Functions::view_process_settings( $view_id, $settings );
 
 				// maybe need view_final_output();
@@ -128,7 +131,8 @@ if ( !class_exists( 'ContentViews_Block' ) ) {
 				$field_css = ContentViews_Block_Common::generate_styles( $block_attributes );
 			}
 			if ( $view_css || $field_css ) {
-				$style = "<style>$view_css\n$field_css</style>";
+				$safe_css = str_ireplace( '</style', '<\/style', "$view_css\n$field_css" );
+				$style = "<style>{$safe_css}</style>";
 			}
 
 			$style .= ContentViews_Block_Common::load_googlefont( $block_attributes );
@@ -194,6 +198,7 @@ if ( !class_exists( 'ContentViews_Block' ) ) {
 			}
 
 			$settings[ PT_CV_PREFIX . 'post__in' ]		 = self::values_from_block( $data, 'includeId', '' );
+			// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- This is our post exclusion feature
 			$settings[ PT_CV_PREFIX . 'post__not_in' ]	 = self::values_from_block( $data, 'excludeId', '' );
 
 			$settings[ PT_CV_PREFIX . 'author__in' ] = self::values_from_block( $data, 'author', '' );
@@ -556,6 +561,7 @@ if ( !class_exists( 'ContentViews_Block' ) ) {
 				'readmoreText'	 => [
 					'__key'		 => 'field-excerpt-readmore-text',
 					'type'		 => 'string',
+					// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 					'default'	 => ucwords( rtrim( __( 'Read more...' ), '.' ) ),
 				],
 				'postsPerPage'			 => [
@@ -704,6 +710,11 @@ if ( !class_exists( 'ContentViews_Block' ) ) {
 			$atts[ "customCss" ]		 = [ 'type' => 'string', ];
 			$atts[ "blockClientId" ]	 = [ 'type' => 'string', ];
 			$atts[ "gutenifyStyles" ]	 = [ 'type' => 'string', ];
+			// compatible: /generateblocks-pro
+			$atts[ "gbBlockCondition" ]			 = [ 'type' => 'string', ];
+			$atts[ "gbBlockConditionInvert" ]	 = [ 'type' => 'boolean', ];
+			// compatible: /attributes-for-blocks
+			$atts[ "attributesForBlocks" ]		 = [ 'type' => 'object', ];
 
 			return apply_filters( PT_CV_PREFIX_ . 'block_attributes', $atts );
 		}
@@ -748,7 +759,7 @@ if ( !class_exists( 'ContentViews_Block' ) ) {
 			return PT_CV_Functions::setting_value( PT_CV_PREFIX . 'blockName' );
 		}
 
-		// TRUE for Shortcode_New_Layouts
+		// TRUE for Shortcode_New_Layouts, Shortcode_Imported_From_Library
 		static function is_hybrid() {
 			return PT_CV_Functions::setting_value( PT_CV_PREFIX . 'hybridLayout' );
 		}

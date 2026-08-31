@@ -70,6 +70,7 @@ if ( !class_exists( 'ContentViews_Elementor_Hooks' ) ) {
 		// Disable loadmore/infinite pagination in Elementor Preview
 		static function disable_pagination_in_preview( $args ) {
 			if ( ContentViews_Elementor_Init::is_widget() ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We simply compare to a set value.
 				if ( !empty( $_REQUEST[ 'action' ] ) && $_REQUEST[ 'action' ] === 'elementor_ajax' ) {
 					$args .= ' data-disabled="1" data-elpreview="1" ';
 				}
@@ -91,8 +92,11 @@ if ( !class_exists( 'ContentViews_Elementor_Hooks' ) ) {
 
 		// Generate view settings from widget
 		static function set_widget_pagination_settings( $args ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- this variable is sanitized later before use
 			if ( !empty( $_POST[ 'iselementor' ] ) ) {
-				$page_id	 = (int) $_POST[ 'postid' ];
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing -- not needed because we only cast to an integer
+				$page_id	 = isset( $_POST[ 'postid' ] ) ? (int) $_POST[ 'postid' ] : 0;
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- sanitized in cv_sanitize_vid
 				$widget_id	 = cv_sanitize_vid( $_POST[ 'iselementor' ] );
 				$args		 = self::get_widget_settings( $page_id, $widget_id );
 			}
@@ -141,8 +145,13 @@ if ( !class_exists( 'ContentViews_Elementor_Hooks' ) ) {
 
 		// Ajax - search posts when typing title
 		static function ajax_search_by_title() {
-			$post_type	 = !empty( $_POST[ 'post_type' ] ) ? sanitize_text_field( $_POST[ 'post_type' ] ) : 'post';
-			$search		 = !empty( $_POST[ 'term' ] ) ? sanitize_text_field( $_POST[ 'term' ] ) : '';
+			check_ajax_referer( 'el_search_action', 'secure_nonce' );
+			if ( !current_user_can( 'edit_posts' ) ) {
+				wp_send_json_error( 'Unauthorized' );
+			}
+
+			$post_type	 = !empty( $_POST[ 'post_type' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'post_type' ] ) ) : 'post';
+			$search		 = !empty( $_POST[ 'term' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'term' ] ) ) : '';
 
 			$post_list	 = self::query_by_title( $post_type, $search );
 
@@ -156,31 +165,44 @@ if ( !class_exists( 'ContentViews_Elementor_Hooks' ) ) {
 
 		// Query by title
 		static function query_by_title( $post_type = 'any', $search = '' ) {
-			global $wpdb;
-			$where	 = '';
 			$data	 = [];
-			$limit	 = 'LIMIT 10';
+			$limit	 = 10;
+			$status	 = 'publish';
+			$args	 = [];
 
 			if ( 'any' === $post_type ) {
 				$searchable_post_types = get_post_types( [ 'exclude_from_search' => false ] );
 				if ( empty( $searchable_post_types ) ) {
-					$where .= ' AND 1=0 ';
+					$args[ 'post__in' ] = [ 0 ]; // Forces an empty result, equivalent to "AND 1=0"
 				} else {
-					$where .= " AND {$wpdb->posts}.post_type IN ('" . join( "', '", array_map( 'esc_sql', $searchable_post_types ) ) . "')";
+					$args[ 'post_type' ] = array_values( $searchable_post_types );
 				}
 			} elseif ( !empty( $post_type ) ) {
-				$post_types	 = explode( ',', $post_type );
-				$where		 .= " AND {$wpdb->posts}.post_type IN ('" . join( "', '", array_map( 'esc_sql', $post_types ) ) . "')";
+				$post_types			 = array_map( 'sanitize_key', explode( ',', $post_type ) );
+				$args[ 'post_type' ]	 = $post_types;
+
+				if ( $post_type === 'attachment' ) {
+					$status = 'inherit';
+				}
 			}
 
 			if ( !empty( $search ) ) {
-				$where .= $wpdb->prepare( " AND {$wpdb->posts}.post_title LIKE %s", '%' . $wpdb->esc_like( $search ) . '%' );
+				$args[ 's' ]				 = $search;
+				// Restricts search to title only (WP 6.2+)
+				$args[ 'search_columns' ]	 = [ 'post_title' ];
 			}
 
-			$query	 = "select post_title,ID  from $wpdb->posts where post_status = 'publish' $where $limit";
-			$results = $wpdb->get_results( $query );
-			if ( !empty( $results ) ) {
-				foreach ( $results as $row ) {
+			// Finalize query arguments
+			$args[ 'post_status' ]				 = $status;
+			$args[ 'posts_per_page' ]			 = $limit;
+			$args[ 'no_found_rows' ]			 = true;
+			$args[ 'update_post_meta_cache' ]	 = false;
+			$args[ 'update_post_term_cache' ]	 = false;
+
+			$query = new WP_Query( $args );
+
+			if ( !empty( $query->posts ) ) {
+				foreach ( $query->posts as $row ) {
 					$data[ $row->ID ] = $row->post_title;
 				}
 			}
@@ -189,16 +211,22 @@ if ( !class_exists( 'ContentViews_Elementor_Hooks' ) ) {
 
 		// Ajax - get post title from IDs
 		static function ajax_get_title_by_ids() {
-			if ( empty( $_POST[ 'id' ] ) || empty( array_filter( (array) $_POST[ 'id' ] ) ) ) {
+			check_ajax_referer( 'el_search_action', 'secure_nonce' );
+			if ( !current_user_can( 'edit_posts' ) ) {
+				wp_send_json_error( 'Unauthorized' );
+			}
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- just check here, sanitized below
+			if ( empty( $_POST[ 'id' ] ) || empty( array_filter( (array) wp_unslash( $_POST[ 'id' ] ) ) ) ) {
 				wp_send_json_error( [] );
 			}
 
-			$ids		 = array_map( 'intval', (array) $_POST[ 'id' ] );
-			$post_types	 = empty( $_POST[ 'post_type' ] ) ? 'post' : array_map( 'sanitize_text_field', explode( ',', $_POST[ 'post_type' ] ) );
+			$ids		 = array_map( 'intval', (array) wp_unslash( $_POST[ 'id' ] ) );
+			$post_types	 = empty( $_POST[ 'post_type' ] ) ? 'post' : array_map( 'sanitize_key', explode( ',', sanitize_text_field( wp_unslash( $_POST[ 'post_type' ] ) ) ) );
 
 			$post_info	 = get_posts( [
 				'post_type'	 => $post_types,
 				'include'	 => $ids,
+				'post_status' => ['publish', 'inherit'],
 			] );
 			$response	 = wp_list_pluck( $post_info, 'post_title', 'ID' );
 

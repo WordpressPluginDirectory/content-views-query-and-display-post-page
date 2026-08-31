@@ -1,10 +1,10 @@
-=== Content Views - Post Grid & Filter, Recent Posts, Category Posts ... (Shortcode, Gutenberg Blocks, and Widgets for Elementor) ===
+=== Content Views - Post Grid & Filter (Shortcode, Blocks, Elementor Widgets) ===
 Contributors: pt-guy
-Tags: post grid, blocks, elementor, gutenberg, recent posts, gutenberg blocks, grid, display posts, post list, post slider, post accordion, category post, news, magazine, portfolio, latest posts, related posts
-Requires at least: 3.3
-Tested up to: 6.9
+Tags: post grid, post filter, block, elementor, category filter
+Requires at least: 5.0
+Tested up to: 7.1
 Requires PHP: 5.6
-Stable tag: 4.2.1
+Stable tag: 4.5.1.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -274,6 +274,33 @@ If you encounter any difficulties or if you have questions about Content Views, 
 
 
 == Changelog ==
+
+= 4.5.1.2 =
+* [Shortcode] Restrict custom post statuses in shortcode output for unauthorized users
+
+= 4.5.1.1 =
+* [Shortcode] Further restrict non-public posts in shortcode output for unauthorized users
+
+= 4.5.1 =
+* [Shortcode] Restrict non-public posts in shortcode output for unauthorized users (credit to Revanth Hari Narayana Matte).
+
+= 4.5 =
+* [Shortcode] Improved security for the Preview panel by enforcing user role/capability checks.
+* [Shortcode] Secured Preview request data handling (credit to Jakub Herman).
+* [Shortcode] Restricted preview access for non-public posts (credit to Averon Averenkov).
+* Improved code for better security and translation support.
+* Other tweaks and improvements
+
+= 4.4 =
+* [Block] Fix compatible issue with WordPress 7.0
+* [Block] Prevent "Error loading block" caused by another plugin
+* [Block] Set field value to 0 on clicking the Reset button of some fields
+* [Shortcode] Fix issue of "Read more" button right after importing library layouts to shortcode
+
+= 4.3 =
+* Fix: [Block] Unexpected block error caused by another block plugin
+* Fix: [WidgetForElementor] fix issue of "Posts Include", "Posts Exclude" with "Media" type
+* Some other improvements
 
 = 4.2.1 =
 * Fix: [Block Admin] fix block toolbar visibility in WordPress 6.9

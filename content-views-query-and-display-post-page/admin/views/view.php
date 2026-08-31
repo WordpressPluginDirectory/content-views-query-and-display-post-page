@@ -20,7 +20,9 @@ $id			 = 0;
 $post_id	 = apply_filters( PT_CV_PREFIX_ . 'view_post_id', 0 );
 
 // Check if this is edit View page
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We simply check if a URL parameter exists
 if ( !empty( $_GET[ 'id' ] ) ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput -- sanitized in cv_sanitize_vid
 	$id = cv_sanitize_vid( $_GET[ 'id' ] );
 
 	if ( $id ) {
@@ -43,8 +45,9 @@ PT_CV_Functions::view_submit();
 	if ( $id ) {
 		?>
 		<div>
-			<div class="view-code">For page content, text widget... <input class="form-control" style="width: 190px;background-color: #ADFFAD;margin-right: 50px;" type="text" value="[pt_view id=&quot;<?php echo $id ?>&quot;]" onclick="this.select()" readonly=""></div>
-			<div class="view-code">For theme file <input class="form-control" style="width: 370px;" type="text" value='&lt;?php echo do_shortcode("[pt_view id=<?php echo $id ?>]"); ?&gt;' onclick="this.select()" readonly=""></div>
+			<div class="view-code">For page content, text widget... <input class="form-control" style="width: 190px;background-color: #ADFFAD;margin-right: 50px;" type="text" value="[pt_view id=&quot;<?php echo esc_attr( $id ); ?>&quot;]" onclick="this.select()" readonly=""></div>
+			<div class="view-code">For theme file <input class="form-control" style="width: 370px;" type="text" value='&lt;?php echo do_shortcode("[pt_view id=<?php echo esc_attr( $id ); ?>]"); ?&gt;' onclick="this.select()" readonly=""></div>
+			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- We use hardcoded HTML string ?>
 			<?php echo apply_filters( PT_CV_PREFIX_ . 'view_actions', '<a class="btn btn-info pull-right" target="_blank" href="https://www.contentviewspro.com/pricing/?utm_source=client&utm_medium=view_header&utm_campaign=gopro">get Pro version</a>', $id ) ?>
 		</div>
 		<div class="clear"></div>
@@ -58,24 +61,26 @@ PT_CV_Functions::view_submit();
 		$options = array(
 			array(
 				'label'	 => array(
-					'text' => __( 'Preview' ),
+					'text' => __( 'Preview', 'content-views-query-and-display-post-page' ),
 				),
 				'params' => array(
 					array(
 						'type'		 => 'html',
 						'name'		 => 'preview',
 						'content'	 => PT_CV_Html::html_preview_box(),
+						// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 						'desc'		 => sprintf( __( 'To see live output, please click %s button', 'content-views-query-and-display-post-page' ), sprintf( '<code>%s</code>', __( 'Show Preview', 'content-views-query-and-display-post-page' ) ) ),
 					),
 				),
 			),
 		);
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in do_settings
 		echo PT_Options_Framework::do_settings( $options, $settings );
 		?>
 	</div>
 
 	<!-- Show Preview -->
-	<a class="btn btn-success" id="<?php echo esc_attr( PT_CV_PREFIX ); ?>show-preview"><?php _e( 'Show Preview', 'content-views-query-and-display-post-page' ); ?></a>
+	<a class="btn btn-success" id="<?php echo esc_attr( PT_CV_PREFIX ); ?>show-preview"><?php esc_html_e( 'Show Preview', 'content-views-query-and-display-post-page' ); ?></a>
 
 	<br>
 
@@ -99,7 +104,7 @@ PT_CV_Functions::view_submit();
 		$options	 = array(
 			array(
 				'label'	 => array(
-					'text' => __( 'Title' ),
+					'text' => __( 'Title', 'content-views-query-and-display-post-page' ),
 				),
 				'params' => array(
 					array(
@@ -111,24 +116,25 @@ PT_CV_Functions::view_submit();
 				),
 			),
 		);
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in do_settings
 		echo PT_Options_Framework::do_settings( $options, $settings );
 		?>
 		<br>
 
 		<!-- Save -->
 		<div class="btn-cvp-action">
-			<input type="submit" class="btn btn-primary pull-right <?php echo esc_attr( PT_CV_PREFIX ); ?>save-view" value="<?php _e( 'Save' ); ?>">
+			<input type="submit" class="btn btn-primary pull-right <?php echo esc_attr( PT_CV_PREFIX ); ?>save-view" value="<?php esc_html_e( 'Save', 'content-views-query-and-display-post-page' ); ?>">
 			<?php do_action( PT_CV_PREFIX_ . 'admin_more_buttons' ); ?>
 		</div>
 
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs">
 			<li class="active">
-				<a href="#<?php echo esc_attr( PT_CV_PREFIX ); ?>filter-settings" data-toggle="tab"><span class="glyphicon glyphicon-search"></span><?php _e( 'Filter Settings', 'content-views-query-and-display-post-page' ); ?>
+				<a href="#<?php echo esc_attr( PT_CV_PREFIX ); ?>filter-settings" data-toggle="tab"><span class="glyphicon glyphicon-search"></span><?php esc_html_e( 'Filter Settings', 'content-views-query-and-display-post-page' ); ?>
 				</a>
 			</li>
 			<li>
-				<a href="#<?php echo esc_attr( PT_CV_PREFIX ); ?>display-settings" data-toggle="tab"><span class="glyphicon glyphicon-th-large"></span><?php _e( 'Display Settings', 'content-views-query-and-display-post-page' ); ?>
+				<a href="#<?php echo esc_attr( PT_CV_PREFIX ); ?>display-settings" data-toggle="tab"><span class="glyphicon glyphicon-th-large"></span><?php esc_html_e( 'Display Settings', 'content-views-query-and-display-post-page' ); ?>
 				</a>
 			</li>
 			<?php do_action( PT_CV_PREFIX_ . 'setting_tabs_header', $settings ); ?>
@@ -307,6 +313,7 @@ PT_CV_Functions::view_submit();
 								'params' => apply_filters( PT_CV_PREFIX_ . 'advanced_settings_panel', array(
 									// Taxonomies Settings
 									'taxonomy'	 => array(
+										// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 										'parent_label' => sprintf( __( 'Filter by %s', 'content-views-query-and-display-post-page' ), __( 'Taxonomy', 'content-views-query-and-display-post-page' ) ),
 										// Taxonomies list
 										array(
@@ -394,7 +401,8 @@ PT_CV_Functions::view_submit();
 									), // End Order by Settings
 									// Author Settings
 									'author'	 => apply_filters( PT_CV_PREFIX_ . 'author_settings', array(
-										'parent_label' => sprintf( __( 'Filter by %s', 'content-views-query-and-display-post-page' ), __( 'Author' ) ),
+										// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+										'parent_label' => sprintf( __( 'Filter by %s', 'content-views-query-and-display-post-page' ), __( 'Author', 'content-views-query-and-display-post-page' ) ),
 										array(
 											'label'	 => array(
 												'text' => __( 'By author', 'content-views-query-and-display-post-page' ),
@@ -429,7 +437,8 @@ PT_CV_Functions::view_submit();
 									) ), // End Author Settings
 									// Status Settings
 									'status'	 => array(
-										'parent_label' => sprintf( __( 'Filter by %s', 'content-views-query-and-display-post-page' ), __( 'Status' ) ),
+										// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+										'parent_label' => sprintf( __( 'Filter by %s', 'content-views-query-and-display-post-page' ), __( 'Status', 'content-views-query-and-display-post-page' ) ),
 										array(
 											'label'			 => array(
 												'text' => '',
@@ -454,7 +463,8 @@ PT_CV_Functions::view_submit();
 									), // End Status Settings
 									// Keyword Settings
 									'search'	 => array(
-										'parent_label' => sprintf( __( 'Filter by %s', 'content-views-query-and-display-post-page' ), __( 'Keyword' ) ),
+										// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+										'parent_label' => sprintf( __( 'Filter by %s', 'content-views-query-and-display-post-page' ), __( 'Keyword', 'content-views-query-and-display-post-page' ) ),
 										apply_filters( PT_CV_PREFIX_ . 'search_settings', array(
 											'label'			 => array(
 												'text' => '',
@@ -493,6 +503,7 @@ PT_CV_Functions::view_submit();
 						),
 					) : '',
 				);
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in do_settings
 				echo PT_Options_Framework::do_settings( $options, $settings );
 				?>
 			</div>
@@ -733,6 +744,7 @@ PT_CV_Functions::view_submit();
 				);
 
 				$options = apply_filters( PT_CV_PREFIX_ . 'display_settings', $options );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in do_settings
 				echo PT_Options_Framework::do_settings( $options, $settings );
 				?>
 			</div>
@@ -747,6 +759,6 @@ PT_CV_Functions::view_submit();
 		<div class="clearfix"></div>
 		<hr>
 		<!-- Save -->
-		<input type="submit" class="btn btn-primary pull-right <?php echo esc_attr( PT_CV_PREFIX ); ?>save-view" value="<?php _e( 'Save' ); ?>">
+		<input type="submit" class="btn btn-primary pull-right <?php echo esc_attr( PT_CV_PREFIX ); ?>save-view" value="<?php esc_html_e( 'Save', 'content-views-query-and-display-post-page' ); ?>">
 	</form>
 </div>

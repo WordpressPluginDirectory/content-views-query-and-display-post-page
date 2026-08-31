@@ -25,11 +25,14 @@ class ContentViews_Block_Common {
 
 	// Generate view settings from block attributes in post content
 	function set_block_pagination_settings( $args ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked before executing this action.
 		if ( !empty( $_POST[ 'isblock' ] ) ) {
-			$apost	 = get_post( (int) $_POST[ 'postid' ] );
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked before executing this action.
+			$apost	 = isset( $_POST[ 'postid' ] ) ? get_post( (int) $_POST[ 'postid' ] ) : null;
 			$content = isset( $apost->post_content ) ? $apost->post_content : '';
 			if ( has_blocks( $content ) ) {
 				$blocks = parse_blocks( $content );
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- sanitized in cv_sanitize_vid
 				$this->parseBlocks( $args, $blocks, cv_sanitize_vid( $_POST[ 'isblock' ] ), cv_sanitize_vid( $_POST[ 'sid' ] ) );
 			}
 		}
@@ -136,7 +139,7 @@ class ContentViews_Block_Common {
 			'upgrade_link'				 => 'https://www.contentviewspro.com/pricing/',
 			'upgrade_text'				 => __( "Upgrade Now", "content-views-query-and-display-post-page" ),
 			'button_text'				 => __( "Content Views Library", "content-views-query-and-display-post-page" ),
-			'confirm_text'				 => __( "Press OK/Enter to finish importing", "content-views-query-and-display-post-page" ),
+			'confirm_text'				 => __( "Click OK to finish (it overrides Display & Style settings of this view).\nClick Cancel to stop.", "content-views-query-and-display-post-page" ),
 			'hide_button'				 => PT_CV_Functions::get_option_value( 'hide_toolbar_button' ),
 			'layout_img'				 => plugins_url( 'assets/layouts/', __FILE__ ),
 			'pre_layouts'				 => self::layout_variants(),
@@ -200,13 +203,13 @@ class ContentViews_Block_Common {
 				'|'			 => '|',
 			),
 			'date_format'				 => [
-				''				 => __( 'Default' ),
-				'g:i a'			 => __( '12:50 am' ),
-				'Y/m/d'			 => __( '2010/11/06' ),
-				'Y-m-d'			 => __( '2010-11-06' ),
-				'F j, Y'		 => __( 'November 6, 2010' ),
-				'F j, Y g:i a'	 => __( 'November 6, 2010 12:50 am' ),
-				'l, F jS, Y'	 => __( 'Saturday, November 6th, 2010' ),
+				''				 => __( 'Default', 'content-views-query-and-display-post-page' ),
+				'g:i a'			 => __( '12:50 am', 'content-views-query-and-display-post-page' ),
+				'Y/m/d'			 => __( '2010/11/06', 'content-views-query-and-display-post-page' ),
+				'Y-m-d'			 => __( '2010-11-06', 'content-views-query-and-display-post-page' ),
+				'F j, Y'		 => __( 'November 6, 2010', 'content-views-query-and-display-post-page' ),
+				'F j, Y g:i a'	 => __( 'November 6, 2010 12:50 am', 'content-views-query-and-display-post-page' ),
+				'l, F jS, Y'	 => __( 'Saturday, November 6th, 2010', 'content-views-query-and-display-post-page' ),
 				'custom'		 => __( 'Custom Format', 'content-views-query-and-display-post-page' )
 			],
 			// prevent error in JS, override in Pro
@@ -215,7 +218,8 @@ class ContentViews_Block_Common {
 	}
 
 	function enqueue_for_blocklib_page() {
-		$page = isset( $_GET[ 'page' ] ) ? sanitize_text_field( $_GET[ 'page' ] ) : null;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We simply compare to a set value.
+		$page = isset( $_GET[ 'page' ] ) ? sanitize_text_field( wp_unslash($_GET[ 'page' ]) ) : null;
 		if ( $page === 'content-views-blocklibrary' || $page === 'content-views-add' ) {
 			$GLOBALS[ 'cv_outside_gutenberg' ] = true;
 			$this->block_enqueue_assets();
@@ -232,6 +236,7 @@ class ContentViews_Block_Common {
 			if ( isset( $atts[ "{$field}Family" ], $atts[ "{$field}Family" ][ 'label' ] ) ) {
 				$font = $atts[ "{$field}Family" ][ 'label' ];
 				if ( !empty( $font ) && !in_array( $font, $GLOBALS[ 'cv_embedded_fonts' ] ) ) {
+					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
 					$embeded_font[]						 = "<link href='//fonts.googleapis.com/css?family=" . urlencode( $font ) . "' rel='stylesheet' type='text/css'>";
 					$GLOBALS[ 'cv_embedded_fonts' ][]	 = $font;
 				}
@@ -252,6 +257,7 @@ class ContentViews_Block_Common {
 		$utm      = '?utm_source=block-editor&utm_medium=problock&utm_campaign=' . $block;
 		$demo_url = 'https://contentviewspro.com/demo/blocks/' . $block_demo . '/' . $utm;
 		$img	 = plugins_url( "block/assets/layouts/demo/$block.svg", PT_CV_FILE );
+		// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 		$text	 = ContentViews_Block_Common::upgrade_link( __( 'To use this Pro block, please %s', 'content-views-query-and-display-post-page' ), $utm );
 		$output	 = "<div style='text-align: center; background: #f9f9f9; padding: 10px;'>$text <img src='$img' style='max-width: 450px; max-height: 400px; margin-bottom: 20px;' /> <p><a href='$demo_url' target='_blank'>See Demo</a></p></div>";
 		return $output;
@@ -413,22 +419,22 @@ class ContentViews_Block_Common {
 
 	static function get_date_options() {
 		$result = array(
-			''				 => sprintf( '- %s -', __( 'Select' ) ),
-			'today'				 => __( 'Today' ),
-			'from_today'		 => __( 'Today and future', 'content-views-pro' ),
-			'today_in_history'	 => __( 'Today in history', 'content-views-pro' ),
-			'in_the_past'		 => __( 'In the past', 'content-views-pro' ),
-			'yesterday'			 => __( 'Yesterday', 'content-views-pro' ),
-			'week_ago'			 => __( '1 week ago (to today)', 'content-views-pro' ),
-			'month_ago'			 => __( '1 month ago (to today)', 'content-views-pro' ),
-			'year_ago'			 => __( '1 year ago (to today)', 'content-views-pro' ),
-			'this_week'			 => __( 'This week', 'content-views-pro' ),
-			'this_month'		 => __( 'This month', 'content-views-pro' ),
-			'this_year'			 => __( 'This year', 'content-views-pro' ),
-			'custom_date'		 => __( 'Custom date', 'content-views-pro' ),
-			'custom_time'		 => __( 'Custom time (from - to)', 'content-views-pro' ),
-			'custom_month'		 => __( 'Custom month', 'content-views-pro' ),
-			'custom_year'		 => __( 'Custom year', 'content-views-pro' ),
+			''				 => sprintf( '- %s -', __( 'Select', 'content-views-query-and-display-post-page' ) ),
+			'today'				 => __( 'Today', 'content-views-query-and-display-post-page' ),
+			'from_today'		 => __( 'Today and future', 'content-views-query-and-display-post-page' ),
+			'today_in_history'	 => __( 'Today in history', 'content-views-query-and-display-post-page' ),
+			'in_the_past'		 => __( 'In the past', 'content-views-query-and-display-post-page' ),
+			'yesterday'			 => __( 'Yesterday', 'content-views-query-and-display-post-page' ),
+			'week_ago'			 => __( '1 week ago (to today)', 'content-views-query-and-display-post-page' ),
+			'month_ago'			 => __( '1 month ago (to today)', 'content-views-query-and-display-post-page' ),
+			'year_ago'			 => __( '1 year ago (to today)', 'content-views-query-and-display-post-page' ),
+			'this_week'			 => __( 'This week', 'content-views-query-and-display-post-page' ),
+			'this_month'		 => __( 'This month', 'content-views-query-and-display-post-page' ),
+			'this_year'			 => __( 'This year', 'content-views-query-and-display-post-page' ),
+			'custom_date'		 => __( 'Custom date', 'content-views-query-and-display-post-page' ),
+			'custom_time'		 => __( 'Custom time (from - to)', 'content-views-query-and-display-post-page' ),
+			'custom_month'		 => __( 'Custom month', 'content-views-query-and-display-post-page' ),
+			'custom_year'		 => __( 'Custom year', 'content-views-query-and-display-post-page' ),
 		);
 
 		return $result;
@@ -443,22 +449,22 @@ class ContentViews_Block_Common {
 
 	static function img_sub_options() {
 		return array(
-			'none'			 => '(' . __( 'None' ) . ')',
-			'image'			 => __( 'Image (in post content)', 'content-views-pro' ),
-			'video-audio'	 => __( 'Video / Audio (in post content)', 'content-views-pro' ),
-			'image-ctf'		 => __( 'Image (in custom field)', 'content-views-pro' ),
+			'none'			 => '(' . __( 'None', 'content-views-query-and-display-post-page' ) . ')',
+			'image'			 => __( 'Image (in post content)', 'content-views-query-and-display-post-page' ),
+			'video-audio'	 => __( 'Video / Audio (in post content)', 'content-views-query-and-display-post-page' ),
+			'image-ctf'		 => __( 'Image (in custom field)', 'content-views-query-and-display-post-page' ),
 		);
 	}
 
 	static function woo_pick_options() {
 		return array(
-			''						 => sprintf( '- %s -', __( 'Select' ) ),
-			'recent_products'		 => __( 'Recent products', 'content-views-pro' ),
-			'sale_products'			 => __( 'Sale products', 'content-views-pro' ),			
-			'best_selling_products'	 => __( 'Best selling products', 'content-views-pro' ),
-			'featured_products'		 => __( 'Featured products', 'content-views-pro' ),
-			'top_rated_products'	 => __( 'Top rated products', 'content-views-pro' ),
-			'out_of_stock'			 => __( 'Out of stock products', 'content-views-pro' ),			
+			''						 => sprintf( '- %s -', __( 'Select', 'content-views-query-and-display-post-page' ) ),
+			'recent_products'		 => __( 'Recent products', 'content-views-query-and-display-post-page' ),
+			'sale_products'			 => __( 'Sale products', 'content-views-query-and-display-post-page' ),			
+			'best_selling_products'	 => __( 'Best selling products', 'content-views-query-and-display-post-page' ),
+			'featured_products'		 => __( 'Featured products', 'content-views-query-and-display-post-page' ),
+			'top_rated_products'	 => __( 'Top rated products', 'content-views-query-and-display-post-page' ),
+			'out_of_stock'			 => __( 'Out of stock products', 'content-views-query-and-display-post-page' ),			
 		);
 	}
 
@@ -467,13 +473,13 @@ class ContentViews_Block_Common {
 		$css = '';
 		if ( $atts[ 'blockName' ] === 'onebig2' ) {
 			$view_selector	 = "#" . PT_CV_PREFIX . 'view-' . $atts[ 'blockId' ];
-			$width			 = $atts[ 'oneWidth' ];
+			$width			 = self::sani_css( $atts[ 'oneWidth' ] );
 			$value			 = $atts[ 'swapPosition' ] ? "auto $width" : "$width auto";
 			$css			 = "$view_selector > .pt-cv-page {grid-template-columns: $value;}";
 		}
 		if ( $atts[ 'blockName' ] === 'overlay2' ) {
 			$view_selector	 = "#" . PT_CV_PREFIX . 'view-' . $atts[ 'blockId' ];
-			$ppp			 = $atts[ 'postsPerPage' ];
+			$ppp			 = absint( $atts[ 'postsPerPage' ] );
 			$value			 = "1 / 1 / $ppp";
 			$css			 = "$view_selector ." . PT_CV_PREFIX . "content-item:first-child {grid-area: $value;}";
 		}
@@ -579,7 +585,7 @@ class ContentViews_Block_Common {
 			$view_css .= $live_filter_selector . ' ~ .cvp-live-button .cvp-live-reset {display: none !important}';
 		}
 		if ( !empty( $atts[ 'lfCustomize' ] ) && !empty( $atts[ 'lfEleColor' ] ) ) {
-			$property_val	 = $atts[ 'lfEleColor' ];
+			$property_val	 = self::sani_css( $atts[ 'lfEleColor' ] );
 			$view_css		 .= "
 				{$live_filter_selector}.cvp-customized input:hover,
 				{$live_filter_selector}.cvp-customized input:focus,
@@ -604,8 +610,8 @@ class ContentViews_Block_Common {
 
 		if ( $atts[ 'viewType' ] === 'overlaygrid' || $atts[ 'viewType' ] === 'blockgrid' || $atts[ 'viewType' ] === 'onebig' ) {
 			if ( !empty( $atts[ 'overlayType' ] ) ) {
-				$value		 = ($atts[ 'overlayType' ] === 'simple') ? $atts[ 'overlayColor' ] : $atts[ 'overlayGradient' ];
-				$opa		 = $atts[ 'overlayOpacity' ];
+				$value		 = self::sani_css( ($atts[ 'overlayType' ] === 'simple') ? $atts[ 'overlayColor' ] : $atts[ 'overlayGradient' ] );
+				$opa		 = floatval( $atts[ 'overlayOpacity' ] );
 				$view_css	 .= "$view_selector ." . PT_CV_PREFIX . "thumb-wrapper::before {background: $value; opacity: $opa;}";
 			}
 			if ( !empty( $atts[ 'overlayPosition' ] ) ) {
@@ -804,7 +810,12 @@ class ContentViews_Block_Common {
 		}
 
 		if ( $value && strpos( $key, 'Family' ) !== false ) {
+			$value = str_replace( array( '"', "'" ), '', $value );
 			$value = '"' . $value . '"';
+		}
+
+		if ( is_string( $value ) ) {
+			$value = self::sani_css( $value );
 		}
 
 		return $value;
@@ -814,6 +825,10 @@ class ContentViews_Block_Common {
 		if ( $value ) {
 			$css[ $property ] = "$property: $value;";
 		}
+	}
+
+	static function sani_css( $value ) {
+		return str_replace( array( '<', '>', '{', '}' ), '', $value );
 	}
 
 	// copy from Pro

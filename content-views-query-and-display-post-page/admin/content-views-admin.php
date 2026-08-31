@@ -114,9 +114,10 @@ class PT_Content_Views_Admin {
 	public function redirect_add_new() {
 		global $pagenow;
 		if ( $pagenow === 'post-new.php' ) {
-			$post_type = isset( $_GET[ 'post_type' ] ) ? $_GET[ 'post_type' ] : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We simply compare to a set value.
+			$post_type = isset( $_GET[ 'post_type' ] ) ? sanitize_key( wp_unslash( $_GET[ 'post_type' ] ) ) : '';
 			if ( apply_filters( PT_CV_PREFIX_ . 'modify_post_url', $post_type === PT_CV_POST_TYPE ) ) {
-				wp_redirect( admin_url( 'admin.php?page=' . $this->plugin_slug . '-add' ), 301 );
+				wp_safe_redirect( admin_url( 'admin.php?page=' . $this->plugin_slug . '-add' ), 301 );
 				exit;
 			}
 		}
@@ -211,12 +212,12 @@ class PT_Content_Views_Admin {
 
 			// Fix for Pro version: "Uncaught ReferenceError: wpColorPickerL10n is not defined" in WordPress 5.5
 			wp_localize_script( 'wp-color-picker', 'wpColorPickerL10n', array(
-				'clear'				 => __( 'Clear' ),
-				'clearAriaLabel'	 => __( 'Clear color' ),
-				'defaultString'		 => __( 'Default' ),
-				'defaultAriaLabel'	 => __( 'Select default color' ),
-				'pick'				 => __( 'Select Color' ),
-				'defaultLabel'		 => __( 'Color value' ),
+				'clear'				 => __( 'Clear', 'content-views-query-and-display-post-page' ),
+				'clearAriaLabel'	 => __( 'Clear color', 'content-views-query-and-display-post-page' ),
+				'defaultString'		 => __( 'Default', 'content-views-query-and-display-post-page' ),
+				'defaultAriaLabel'	 => __( 'Select default color', 'content-views-query-and-display-post-page' ),
+				'pick'				 => __( 'Select Color', 'content-views-query-and-display-post-page' ),
+				'defaultLabel'		 => __( 'Color value', 'content-views-query-and-display-post-page' ),
 			) );
 
 			// Main admin script
@@ -348,23 +349,23 @@ class PT_Content_Views_Admin {
 			);
 
 			$this->plugin_sub_screen_hook_suffix[] = PT_CV_Functions::menu_add_sub(
-			$this->plugin_slug, __( 'Add New View', 'content-views-query-and-display-post-page' ), _x( 'Add New', 'post' ), $user_role, 'add', __CLASS__
+			$this->plugin_slug, __( 'Add New View', 'content-views-query-and-display-post-page' ), __( 'Add New', 'content-views-query-and-display-post-page' ), $user_role, 'add', __CLASS__
 			);
 		}
 
 		$this->plugin_sub_screen_hook_suffix[] = PT_CV_Functions::menu_add_sub(
-				$this->plugin_slug, __( 'Layout Library', 'content-views-query-and-display-post-page' ), _x( 'Layout Library', 'post' ), $user_role, 'blocklibrary', __CLASS__
+				$this->plugin_slug, __( 'Layout Library', 'content-views-query-and-display-post-page' ), __( 'Layout Library', 'content-views-query-and-display-post-page' ), $user_role, 'blocklibrary', __CLASS__
 		);
 
 		$this->plugin_sub_screen_hook_suffix[] = PT_CV_Functions::menu_add_sub(
-				$this->plugin_slug, __( 'Content Views Settings', 'content-views-query-and-display-post-page' ), __( 'Settings' ), $user_role, 'setting', __CLASS__
+				$this->plugin_slug, __( 'Content Views Settings', 'content-views-query-and-display-post-page' ), __( 'Settings', 'content-views-query-and-display-post-page' ), $user_role, 'setting', __CLASS__
 		);
 
 
 		global $submenu;
 		// Modify Menu Title
 		if ( !empty( $submenu[ 'content-views' ][ 0 ][ 0 ] ) ) {
-			$submenu[ 'content-views' ][ 0 ][ 0 ] = __( 'Dashboard' );
+			$submenu[ 'content-views' ][ 0 ][ 0 ] = __( 'Dashboard', 'content-views-query-and-display-post-page' );
 		}
 		// Modify URL of "All Views"
 		if ( !empty( $submenu[ 'content-views' ][ 1 ][ 2 ] ) && !$hide_sc ) {
@@ -383,7 +384,7 @@ class PT_Content_Views_Admin {
 			// Get View id
 			$view_id = get_post_meta( $post_id, PT_CV_META_ID, true );
 
-			printf( '<input style="width: 200px; background: #ADFFAD;" type="text" value="[pt_view id=&quot;%s&quot;]" onclick="this.select()" readonly="">', cv_sanitize_vid( $view_id ) );
+			printf( '<input style="width: 200px; background: #ADFFAD;" type="text" value="[pt_view id=&quot;%s&quot;]" onclick="this.select()" readonly="">', esc_attr( cv_sanitize_vid( $view_id ) ) );
 		}
 	}
 
@@ -420,8 +421,8 @@ class PT_Content_Views_Admin {
 
 		return array_merge(
 			array(
-			'settings'	 => '<a href="' . admin_url( 'admin.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings' ) . '</a>',
-			'add'		 => '<a href="' . admin_url( 'admin.php?page=' . $this->plugin_slug . '-add' ) . '">' . _x( 'Add New', 'post' ) . '</a>',
+			'settings'	 => '<a href="' . admin_url( 'admin.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'content-views-query-and-display-post-page' ) . '</a>',
+			'add'		 => '<a href="' . admin_url( 'admin.php?page=' . $this->plugin_slug . '-add' ) . '">' . __( 'Add New', 'content-views-query-and-display-post-page' ) . '</a>',
 			), $links
 		);
 	}
@@ -455,7 +456,7 @@ class PT_Content_Views_Admin {
 
 		if ( !empty( $view_id ) ) {
 			$edit_link			 = PT_CV_Functions::view_link( $view_id );
-			$actions[ 'edit' ]	 = '<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit' ) . '</a>';
+			$actions[ 'edit' ]	 = '<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'content-views-query-and-display-post-page' ) . '</a>';
 		}
 
 		// Filter actions
@@ -473,9 +474,9 @@ class PT_Content_Views_Admin {
 		unset( $defaults[ 'author' ] );
 		unset( $defaults[ 'date' ] );
 
-		$defaults[ 'shortcode' ] = __( 'Shortcode' );
-		$defaults[ 'author' ]	 = __( 'Author' );
-		$defaults[ 'date' ]		 = __( 'Date' );
+		$defaults[ 'shortcode' ] = __( 'Shortcode', 'content-views-query-and-display-post-page' );
+		$defaults[ 'author' ]	 = __( 'Author', 'content-views-query-and-display-post-page' );
+		$defaults[ 'date' ]		 = __( 'Date', 'content-views-query-and-display-post-page' );
 
 		return $defaults;
 	}
@@ -514,8 +515,9 @@ class PT_Content_Views_Admin {
 		// If is View page
 		if ( $this->plugin_screen_hook_suffix == $screen->id || in_array( $screen->id, $this->plugin_sub_screen_hook_suffix ) ) {
 			// If View id is passed in url
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- we only check this variable is empty or not, no data is processed or saved
 			if ( !empty( $_GET[ 'id' ] ) ) {
-				$admin_title = str_replace( _x( 'Add New', 'post' ), __( 'Edit' ), $admin_title );
+				$admin_title = str_replace( __( 'Add New', 'content-views-query-and-display-post-page' ), __( 'Edit', 'content-views-query-and-display-post-page' ), $admin_title );
 			}
 		}
 

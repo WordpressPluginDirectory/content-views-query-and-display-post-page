@@ -26,7 +26,7 @@ class ContentViews_Block_TemplatePattern {
 	public function init() {
 		if ( current_user_can( 'edit_posts' ) ) {
 			if ( !wp_next_scheduled( 'contentviews_block_cron' ) ) {
-				wp_schedule_event( strtotime( date( 'Y-m-d' ) . ' midnight' ), 'daily', 'contentviews_block_cron' );
+				wp_schedule_event( strtotime( gmdate( 'Y-m-d' ) . ' midnight' ), 'daily', 'contentviews_block_cron' );
 			}
 		}
 	}
@@ -120,6 +120,7 @@ class ContentViews_Block_TemplatePattern {
 			file_put_contents( $cache_file_dir . '/templates_patterns.json', $data );
 			return true;
 		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e->getMessage() );
 			return false;
 		}

@@ -345,7 +345,7 @@ if ( !class_exists( 'PT_Options_Framework' ) ) {
 			$description = apply_filters( PT_CV_PREFIX_ . 'options_description', $description, $param );
 			if ( !empty( $description ) ) {
 				// Append dot to end of description
-				if ( trim( strip_tags( $description ) ) != '' && substr( $description, -1 ) != '?' ) {
+				if ( trim( wp_strip_all_tags( $description ) ) != '' && substr( $description, -1 ) != '?' ) {
 					$description .= '.';
 				}
 				// esc_html will break popover
